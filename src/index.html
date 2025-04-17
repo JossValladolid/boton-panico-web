@@ -1,3 +1,4 @@
+<!-- #1 -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,27 +9,48 @@
     <form id="myForm" class="contenedor">
         <div class="contenedor-grid">
             <label for="codigoEstudiante" class="titulo">Código de estudiante:</label>
-            <input type="text" id="codigoEstudiante" name="codigoEstudiante" class="cuadro-texto">
+            <input placeholder="Obligatorio" type="text" id="codigoEstudiante" name="codigoEstudiante" class="cuadro-texto">
             <span id="errorCodigo" style="color: #800000;"></span>
         </div>
         <div class="contenedor-grid">
             <label for="nombre" class="titulo">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" class="cuadro-texto">
+            <input placeholder="Opcional" id="nombre" name="nombre" class="cuadro-texto">
         </div>
         <div class="contenedor-grid">
             <label for="descripcion" class="titulo">Descripción:</label>
-            <textarea type="text" id="descripcion" name="descripcion" class="area-texto" rows="5" cols="60"></textarea>
+            <textarea placeholder="Obligatorio" type="text" id="descripcion" name="descripcion" class="area-texto" rows="5" cols="60"></textarea>
             <span id="errorDescripcion" style="color: #800000;"></span>
         </div>
-        <button type="submit" class="input-circular">Enviar</button>
+        <div class="contenedor-envio">
+            <button type="submit" class="input-circular">Enviar</button>
+            <span id="exitoEnvio" style="color: #3957a5;"></span>
+        </div>
     </form>
 
     <script>
+        function limpiarMensajeExito() {
+            exitoEnvioSpan.textContent = '';
+        }
+        
+        function limpiarMensajeErrorCodigo() {
+            errorCodigoSpan.textContent = '';
+        }
+
+        function limpiarMensajeErrorDescripcion() {
+            errorDescripcionSpan.textContent = '';
+        }
+
         const form = document.getElementById('myForm');
         const codigoEstudianteInput = document.getElementById('codigoEstudiante');
         const errorCodigoSpan = document.getElementById('errorCodigo');
         const descripcionInput = document.getElementById('descripcion');
+        const nombreInput = document.getElementById('nombre');
         const errorDescripcionSpan = document.getElementById('errorDescripcion');
+        const exitoEnvioSpan = document.getElementById('exitoEnvio');
+
+        codigoEstudianteInput.addEventListener('focus', limpiarMensajeExito);
+        nombreInput.addEventListener('focus', limpiarMensajeExito);
+        descripcionInput.addEventListener('focus', limpiarMensajeExito); 
 
         form.addEventListener('submit', function(event) {
             event.preventDefault(); // Evita el envío tradicional del formulario
@@ -41,8 +63,7 @@
 
             // Validar código de estudiante
             if (codigoEstudianteValor.length !== 9 || !/^\d+$/.test(codigoEstudianteValor)) {
-                errorCodigoSpan.textContent = 'El código de estudiante debe tener exactamente\n9 dígitos numéricos.';
-                codigoEstudianteInput.focus();
+                errorCodigoSpan.textContent = 'El código de estudiante debe tener exactamente 9 dígitos numéricos.';
                 isValid = false;
             } else {
                 errorCodigoSpan.textContent = '';
@@ -51,7 +72,6 @@
             // Validar descripción (no vacía)
             if (descripcionValor === '') {
                 errorDescripcionSpan.textContent = 'La descripción no puede estar vacía.';
-                descripcionInput.focus();
                 isValid = false;
             } else {
                 errorDescripcionSpan.textContent = '';
@@ -78,6 +98,12 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log('Respuesta del servidor:', data);
+                    exitoEnvioSpan.textContent = 'Su reporte ha sido recibido';
+                    errorCodigoSpan.textContent = '';
+                    errorDescripcionSpan.textContent = '';
+                    document.getElementById('codigoEstudiante').value = '';
+                    document.getElementById('nombre').value = '';
+                    document.getElementById('descripcion').value = '';
                     // Aquí puedes manejar la respuesta del servidor
                 })
                 .catch(error => {
@@ -85,7 +111,12 @@
                     // Aquí puedes manejar los errores de la petición
                 });
             }
+            else {
+                limpiarMensajeExito();
+            }
         });
+        descripcionInput.addEventListener('focus', limpiarMensajeErrorDescripcion);
+        codigoEstudianteInput.addEventListener('focus', limpiarMensajeErrorCodigo);
     </script>
 </body>
 </html>
