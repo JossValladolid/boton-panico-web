@@ -6,59 +6,85 @@
 </head>
 <body>
     <form id="myForm" class="contenedor">
-        <div class="contenedor">
+        <div class="contenedor-grid">
             <label for="codigoEstudiante" class="titulo">Código de estudiante:</label>
             <input type="text" id="codigoEstudiante" name="codigoEstudiante" class="cuadro-texto">
+            <span id="errorCodigo" style="color: #800000;"></span>
         </div>
-        <div class="contenedor">
+        <div class="contenedor-grid">
             <label for="nombre" class="titulo">Nombre:</label>
             <input type="text" id="nombre" name="nombre" class="cuadro-texto">
         </div>
-        <div class="contenedor">
-            <label for="descripcion" class="titulo">Descripcion:</label>
-            <input type="text" id="descripcion" name="descripcion" class="cuadro-texto">
+        <div class="contenedor-grid">
+            <label for="descripcion" class="titulo">Descripción:</label>
+            <textarea type="text" id="descripcion" name="descripcion" class="area-texto" rows="5" cols="60"></textarea>
+            <span id="errorDescripcion" style="color: #800000;"></span>
         </div>
         <button type="submit" class="input-circular">Enviar</button>
     </form>
 
     <script>
         const form = document.getElementById('myForm');
+        const codigoEstudianteInput = document.getElementById('codigoEstudiante');
+        const errorCodigoSpan = document.getElementById('errorCodigo');
+        const descripcionInput = document.getElementById('descripcion');
+        const errorDescripcionSpan = document.getElementById('errorDescripcion');
 
         form.addEventListener('submit', function(event) {
             event.preventDefault(); // Evita el envío tradicional del formulario
 
-            // 1. Obtener los datos del formulario
-            const codigoEstudianteValor = document.getElementById('codigoEstudiante').value;
+            const codigoEstudianteValor = codigoEstudianteInput.value.trim();
             const nombreValor = document.getElementById('nombre').value;
-            const descripcionValor = document.getElementById('descripcion').value;
+            const descripcionValor = descripcionInput.value.trim();
 
-            // 2. Crear un objeto JavaScript con los datos
-            const formData = {
-              codigoEstudiante: codigoEstudianteValor,
-              nombre: nombreValor,
-              descripcion: descripcionValor
-            };
+            let isValid = true;
 
-            // 3. Convertir el objeto JavaScript a JSON
-            const jsonData = JSON.stringify(formData);
-            console.log('Datos JSON a enviar:', jsonData);
-            // 4. Enviar la petición HTTP usando fetch
-            fetch('http://localhost:8000/tasks/', { // Reemplaza '/tu-endpoint-servidor' con la URL de tu API
-                method: 'POST', // O el método HTTP que necesites (PUT, DELETE, etc.)
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: jsonData
-            })
-            .then(response => response.json()) // O response.text() si el servidor no devuelve JSON
-            .then(data => {
-                console.log('Respuesta del servidor:', data);
-                // Aquí puedes manejar la respuesta del servidor, por ejemplo, mostrar un mensaje al usuario
-            })
-            .catch(error => {
-                console.error('Error al enviar la petición:', error);
-                // Aquí puedes manejar los errores de la petición
-            });
+            // Validar código de estudiante
+            if (codigoEstudianteValor.length !== 9 || !/^\d+$/.test(codigoEstudianteValor)) {
+                errorCodigoSpan.textContent = 'El código de estudiante debe tener exactamente\n9 dígitos numéricos.';
+                codigoEstudianteInput.focus();
+                isValid = false;
+            } else {
+                errorCodigoSpan.textContent = '';
+            }
+
+            // Validar descripción (no vacía)
+            if (descripcionValor === '') {
+                errorDescripcionSpan.textContent = 'La descripción no puede estar vacía.';
+                descripcionInput.focus();
+                isValid = false;
+            } else {
+                errorDescripcionSpan.textContent = '';
+            }
+
+            // Si todos los campos son válidos, proceder con el envío
+            if (isValid) {
+                const formData = {
+                    codigoEstudiante: codigoEstudianteValor,
+                    nombre: nombreValor,
+                    descripcion: descripcionValor
+                };
+
+                const jsonData = JSON.stringify(formData);
+                console.log('Datos JSON a enviar:', jsonData);
+
+                fetch('http://localhost:8000/tasks/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: jsonData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Respuesta del servidor:', data);
+                    // Aquí puedes manejar la respuesta del servidor
+                })
+                .catch(error => {
+                    console.error('Error al enviar la petición:', error);
+                    // Aquí puedes manejar los errores de la petición
+                });
+            }
         });
     </script>
 </body>

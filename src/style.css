@@ -2,46 +2,58 @@ body {
     margin: 0;
     height: 100vh;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: center; /* Centra horizontalmente el formulario */
+    align-items: center; /* Centra verticalmente el formulario */
     background-color: #f0f0f0;
-}
-
-.titulo{
-    font-size: 28px;
-    margin: 0;
-    align-self: center;
-    margin-bottom: 5px;
 }
 
 .contenedor {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    flex-direction: column; /* Alinea los elementos internos verticalmente */
+    gap: 10px; /* Espacio entre los elementos internos */
+    width: 350px; /* Ancho fijo del formulario (ajusta según necesites) */
+    padding: 20px; /* Espacio interno alrededor del formulario (opcional) */
+    background-color: white; /* Color de fondo del formulario (opcional) */
+    border-radius: 8px; /* Bordes redondeados (opcional) */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave (opcional) */
 }
 
-.cuadro-texto {
-    width: 200px;
+.titulo {
+    text-align: left; /* Alinea el texto de la etiqueta a la izquierda */
+    margin-bottom: 5px;
+    display: block; /* Asegura que la etiqueta ocupe una línea completa */
+}
+
+.cuadro-texto,
+.area-texto {
+    width: 100%; /* Los inputs ocupan el ancho del contenedor del formulario */
     padding: 8px;
-    font-size: 16px;
     border: 1px solid #ccc;
-    border-radius: 6px;
-    align-self: center;
+    border-radius: 4px;
+    box-sizing: border-box; /* Incluye padding y border en el ancho */
+    resize: none;
+}
+
+.contenedor-grid span {
+    color: #800000;
+    display: block;
+    margin-top: 5px;
+    font-size: 0.9em;
 }
 
 .input-circular {
-    margin: 10px;
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background-color: #2196F3;
+    background-color: #800000;
     color: white;
     border: none;
     font-size: 12px;
     cursor: pointer;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
     transition: background-color 0.3s;
-    align-self: center;
+    align-self: center; /* Centra el botón horizontalmente dentro del formulario */
+    margin-top: 15px; /* Espacio superior para el botón */
 }
 
 .input-circular:hover {
@@ -51,4 +63,6 @@ body {
 p {
     margin: 0;
     margin-left: 2px;
+    font-size: 0.8em; /* Tamaño de fuente más pequeño para el párrafo */
+    color: #555;
 }
