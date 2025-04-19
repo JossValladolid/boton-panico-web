@@ -679,6 +679,16 @@ footer {
     margin-top: 20px;
 }
 
+.standalone-form {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
 /* Responsive Styles */
 @media (max-width: 992px) {
     .feature {

@@ -20,6 +20,7 @@
             </div>
             <ul class="nav-menu">
                 <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#enviar-reporte">Enviar reporte</a></li>
                 <li><a href="#preguntas-frecuentes">Preguntas frecuentes</a></li>
                 <li><a href="#ayuda">Ayuda</a></li>
                 <li><a href="#contactanos">Contáctanos</a></li>
@@ -54,26 +55,20 @@
                         <p>Disponible en cualquier dispositivo con acceso a internet.</p>
                     </div>
                 </div>
-                
-                <div class="cta-button">
-                    <button id="show-form-button">Enviar Reporte Ahora</button>
-                </div>
             </div>
         </section>
 
-        <!-- Formulario (aparece al hacer clic en "Enviar Reporte Ahora") -->
-        <div id="form-overlay" class="hidden">
-            <div class="form-container">
-                <form id="myForm" class="contenedor">
-                    <div class="form-header">
-                        <h3>Enviar Reporte</h3>
-                        <span id="close-form">&times;</span>
-                    </div>
-                    <div class="contenedor-grid">
-                        <label for="codigoEstudiante" class="titulo">Código de estudiante:</label>
-                        <input placeholder="Obligatorio" type="text" id="codigoEstudiante" name="codigoEstudiante" class="cuadro-texto">
-                        <span id="errorCodigo" class="error-message"></span>
-                    </div>
+        <section id="enviar-reporte" class="section">
+            <div class="section-content">
+                <h2>Enviar Reporte</h2>
+                <div class="form-container standalone-form">
+                    <form id="myForm" class="contenedor">
+                        <!-- El contenido actual del formulario -->
+                        <div class="contenedor-grid">
+                            <label for="codigoEstudiante" class="titulo">Código de estudiante:</label>
+                            <input placeholder="Obligatorio" type="text" id="codigoEstudiante" name="codigoEstudiante" class="cuadro-texto">
+                            <span id="errorCodigo" class="error-message"></span>
+                        </div>
                     <div class="contenedor-grid">
                         <label for="nombre" class="titulo">Nombre:</label>
                         <input placeholder="Opcional" id="nombre" name="nombre" class="cuadro-texto">
@@ -90,6 +85,7 @@
                 </form>
             </div>
         </div>
+    </section>
 
         <!-- Sección Preguntas Frecuentes -->
         <section id="preguntas-frecuentes" class="section">
