@@ -1,121 +1,398 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Enviar Formulario como JSON</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniPanic - Sistema de Reporte Universitario</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <form id="myForm" class="contenedor">
-        <div class="contenedor-grid">
-            <label for="codigoEstudiante" class="titulo">Código de estudiante:</label>
-            <input placeholder="Obligatorio" type="text" id="codigoEstudiante" name="codigoEstudiante" class="cuadro-texto">
-            <span id="errorCodigo" style="color: #800000;"></span>
+    <header>
+        <div class="logo">
+            <h1>UniPanic</h1>
         </div>
-        <div class="contenedor-grid">
-            <label for="nombre" class="titulo">Nombre:</label>
-            <input placeholder="Opcional" id="nombre" name="nombre" class="cuadro-texto">
-        </div>
-        <div class="contenedor-grid">
-            <label for="descripcion" class="titulo">Descripción:</label>
-            <textarea placeholder="Obligatorio" type="text" id="descripcion" name="descripcion" class="area-texto" rows="5" cols="60"></textarea>
-            <span id="errorDescripcion" style="color: #800000;"></span>
-        </div>
-        <div class="contenedor-envio">
-            <button type="submit" class="input-circular">Enviar</button>
-            <span id="exitoEnvio" style="color: #3957a5;"></span>
-        </div>
-    </form>
+        <nav>
+            <div class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#preguntas-frecuentes">Preguntas frecuentes</a></li>
+                <li><a href="#ayuda">Ayuda</a></li>
+                <li><a href="#contactanos">Contáctanos</a></li>
+                <li><a href="#privacidad">Avisos de privacidad</a></li>
+                <li><a href="#terminos">Términos y condiciones</a></li>
+                <li><a href="#acerca-de">Acerca de</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <script>
-        function limpiarMensajeExito() {
-            exitoEnvioSpan.textContent = '';
-        }
+    <main>
+        <!-- Sección Home -->
+        <section id="home" class="section active-section">
+            <div class="section-content">
+                <h2>Botón de Pánico Universitario</h2>
+                <p class="lead">Un sistema seguro para reportar situaciones de emergencia en tu campus.</p>
+                
+                <div class="home-features">
+                    <div class="feature">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Seguro</h3>
+                        <p>Tu información está protegida y solo será vista por mediadores autorizados.</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-bolt"></i>
+                        <h3>Inmediato</h3>
+                        <p>Los reportes se envían instantáneamente a nuestros mediadores.</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-mobile-alt"></i>
+                        <h3>Accesible</h3>
+                        <p>Disponible en cualquier dispositivo con acceso a internet.</p>
+                    </div>
+                </div>
+                
+                <div class="cta-button">
+                    <button id="show-form-button">Enviar Reporte Ahora</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Formulario (aparece al hacer clic en "Enviar Reporte Ahora") -->
+        <div id="form-overlay" class="hidden">
+            <div class="form-container">
+                <form id="myForm" class="contenedor">
+                    <div class="form-header">
+                        <h3>Enviar Reporte</h3>
+                        <span id="close-form">&times;</span>
+                    </div>
+                    <div class="contenedor-grid">
+                        <label for="codigoEstudiante" class="titulo">Código de estudiante:</label>
+                        <input placeholder="Obligatorio" type="text" id="codigoEstudiante" name="codigoEstudiante" class="cuadro-texto">
+                        <span id="errorCodigo" class="error-message"></span>
+                    </div>
+                    <div class="contenedor-grid">
+                        <label for="nombre" class="titulo">Nombre:</label>
+                        <input placeholder="Opcional" id="nombre" name="nombre" class="cuadro-texto">
+                    </div>
+                    <div class="contenedor-grid">
+                        <label for="descripcion" class="titulo">Descripción:</label>
+                        <textarea placeholder="Obligatorio" type="text" id="descripcion" name="descripcion" class="area-texto" rows="5" cols="60"></textarea>
+                        <span id="errorDescripcion" class="error-message"></span>
+                    </div>
+                    <div class="contenedor-envio">
+                        <button type="submit" class="input-circular">Enviar</button>
+                        <span id="exitoEnvio" class="success-message"></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Sección Preguntas Frecuentes -->
+        <section id="preguntas-frecuentes" class="section">
+            <div class="section-content">
+                <h2>Preguntas Frecuentes</h2>
+                
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <div class="accordion-header">¿Qué es UniPanic?</div>
+                        <div class="accordion-content">
+                            <p>UniPanic es un sistema de reporte de emergencias diseñado para la comunidad universitaria. Permite enviar alertas rápidas a mediadores capacitados cuando te encuentres en una situación de riesgo o presencies algún incidente que requiera atención.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header">¿Quién puede ver mi reporte?</div>
+                        <div class="accordion-content">
+                            <p>Solo los mediadores designados por la universidad tienen acceso a los reportes enviados. Tu información personal está protegida y se maneja con estricta confidencialidad.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header">¿Es obligatorio poner mi nombre?</div>
+                        <div class="accordion-content">
+                            <p>No, el campo de nombre es opcional. Sin embargo, incluir tu nombre puede facilitar el seguimiento de tu caso. El código de estudiante sí es obligatorio para verificar que perteneces a la comunidad universitaria.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header">¿Qué tipo de situaciones puedo reportar?</div>
+                        <div class="accordion-content">
+                            <p>Puedes reportar cualquier situación que consideres una emergencia o que requiera atención inmediata: acoso, violencia, situaciones de riesgo, emergencias médicas, entre otras.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <div class="accordion-header">¿Cuánto tiempo tarda en procesarse mi reporte?</div>
+                        <div class="accordion-content">
+                            <p>Los reportes se envían de forma inmediata a nuestro equipo de mediadores, quienes evaluarán la situación y tomarán las acciones necesarias con la mayor rapidez posible.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Ayuda -->
+        <section id="ayuda" class="section">
+            <div class="section-content">
+                <h2>Ayuda</h2>
+                
+                <div class="help-container">
+                    <div class="help-item">
+                        <h3>Cómo usar UniPanic</h3>
+                        <ol>
+                            <li>Desde la página principal, haz clic en "Enviar Reporte Ahora"</li>
+                            <li>Ingresa tu código de estudiante (9 dígitos numéricos)</li>
+                            <li>Opcionalmente, ingresa tu nombre</li>
+                            <li>Describe detalladamente la situación en el campo de descripción</li>
+                            <li>Haz clic en el botón "Enviar"</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="help-item">
+                        <h3>Problemas comunes</h3>
+                        <ul>
+                            <li><strong>No puedo enviar mi reporte:</strong> Verifica que tu código de estudiante tenga exactamente 9 dígitos y que hayas completado el campo de descripción.</li>
+                            <li><strong>No recibo confirmación:</strong> Una vez enviado correctamente, verás un mensaje de confirmación en pantalla. Si esto no sucede, intenta nuevamente.</li>
+                            <li><strong>La página no carga:</strong> Asegúrate de tener conexión a internet y prueba refrescar la página.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="help-item">
+                        <h3>Recursos adicionales</h3>
+                        <ul>
+                            <li><a href="#contactanos">Contacta a soporte técnico</a></li>
+                            <li><a href="#preguntas-frecuentes">Revisa las preguntas frecuentes</a></li>
+                            <li>Línea directa de emergencias: <strong>800-123-4567</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Contáctanos -->
+        <section id="contactanos" class="section">
+            <div class="section-content">
+                <h2>Contáctanos</h2>
+                
+                <div class="contact-container">
+                    <div class="contact-info">
+                        <h3>Información de contacto</h3>
+                        <p><i class="fas fa-envelope"></i> Email: soporte@unipanic.edu</p>
+                        <p><i class="fas fa-phone"></i> Teléfono: (01) 800-123-4567</p>
+                        <p><i class="fas fa-clock"></i> Horario: Lunes a Viernes, 8:00 AM - 8:00 PM</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Ubicación: Oficina de Mediación Universitaria, Edificio Central</p>
+                    </div>
+                    
+                    <div class="contact-form">
+                        <h3>Envíanos un mensaje</h3>
+                        <form id="contactForm">
+                            <div class="form-group">
+                                <label for="contactNombre">Nombre:</label>
+                                <input type="text" id="contactNombre" name="contactNombre" placeholder="Tu nombre" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contactEmail">Correo electrónico:</label>
+                                <input type="email" id="contactEmail" name="contactEmail" placeholder="tu@email.com" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contactAsunto">Asunto:</label>
+                                <input type="text" id="contactAsunto" name="contactAsunto" placeholder="Asunto de tu mensaje" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contactMensaje">Mensaje:</label>
+                                <textarea id="contactMensaje" name="contactMensaje" placeholder="Escribe tu mensaje aquí" rows="5" required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="submit-button">Enviar mensaje</button>
+                            <span id="contactExito" class="success-message"></span>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Avisos de Privacidad -->
+        <section id="privacidad" class="section">
+            <div class="section-content">
+                <h2>Avisos de Privacidad</h2>
+                
+                <div class="legal-content">
+                    <h3>Política de Privacidad</h3>
+                    <p>Última actualización: Abril 2025</p>
+                    
+                    <h4>1. Información que recopilamos</h4>
+                    <p>En UniPanic, recopilamos la siguiente información:</p>
+                    <ul>
+                        <li>Código de estudiante</li>
+                        <li>Nombre (opcional)</li>
+                        <li>Descripción del incidente reportado</li>
+                        <li>Fecha y hora del reporte</li>
+                    </ul>
+                    
+                    <h4>2. Uso de la información</h4>
+                    <p>La información recopilada se utiliza exclusivamente para:</p>
+                    <ul>
+                        <li>Procesar y dar seguimiento a los reportes de incidentes</li>
+                        <li>Verificar la pertenencia a la comunidad universitaria</li>
+                        <li>Contactar al estudiante en caso de ser necesario para el seguimiento del caso</li>
+                        <li>Generar estadísticas anónimas para mejorar la seguridad universitaria</li>
+                    </ul>
+                    
+                    <h4>3. Protección de datos</h4>
+                    <p>Todos los datos son almacenados en servidores seguros con acceso restringido. Solo el personal autorizado de mediación tiene acceso a la información completa de los reportes.</p>
+                    
+                    <h4>4. Compartición de información</h4>
+                    <p>No compartimos tu información personal con terceros, salvo en los siguientes casos:</p>
+                    <ul>
+                        <li>Cuando sea requerido por ley</li>
+                        <li>Con autoridades universitarias competentes para resolver el incidente reportado</li>
+                        <li>En situaciones donde exista un riesgo inminente para la integridad física de alguna persona</li>
+                    </ul>
+                    
+                    <h4>5. Tus derechos</h4>
+                    <p>Tienes derecho a:</p>
+                    <ul>
+                        <li>Acceder a tu información personal</li>
+                        <li>Solicitar la rectificación de datos incorrectos</li>
+                        <li>Solicitar la eliminación de tus datos (salvo cuando existan obligaciones legales de conservación)</li>
+                    </ul>
+                    
+                    <h4>6. Contacto</h4>
+                    <p>Para ejercer tus derechos o resolver dudas sobre el tratamiento de tus datos, contacta a: privacidad@unipanic.edu</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Términos y Condiciones -->
+        <section id="terminos" class="section">
+            <div class="section-content">
+                <h2>Términos y Condiciones</h2>
+                
+                <div class="legal-content">
+                    <h3>Términos de Uso</h3>
+                    <p>Última actualización: Abril 2025</p>
+                    
+                    <h4>1. Aceptación de términos</h4>
+                    <p>Al utilizar UniPanic, aceptas estos términos y condiciones en su totalidad. Si no estás de acuerdo con ellos, no debes utilizar este servicio.</p>
+                    
+                    <h4>2. Descripción del servicio</h4>
+                    <p>UniPanic es un sistema de reporte de emergencias para uso exclusivo de la comunidad universitaria. Su propósito es facilitar la comunicación rápida de situaciones de riesgo o emergencia a los mediadores universitarios designados.</p>
+                    
+                    <h4>3. Uso adecuado</h4>
+                    <p>Te comprometes a:</p>
+                    <ul>
+                        <li>Utilizar el sistema únicamente para reportar situaciones genuinas que requieran atención</li>
+                        <li>Proporcionar información veraz y precisa en tus reportes</li>
+                        <li>No utilizar el sistema para enviar contenido ofensivo, difamatorio o falso</li>
+                        <li>No intentar acceder a información de otros usuarios o del sistema mismo</li>
+                    </ul>
+                    
+                    <h4>4. Reportes falsos</h4>
+                    <p>El envío deliberado de reportes falsos constituye una falta grave que puede resultar en sanciones disciplinarias según el reglamento universitario.</p>
+                    
+                    <h4>5. Limitación de responsabilidad</h4>
+                    <p>La universidad hace esfuerzos razonables para mantener el sistema disponible y responder a los reportes con prontitud, pero no garantiza:</p>
+                    <ul>
+                        <li>Disponibilidad ininterrumpida del servicio</li>
+                        <li>Tiempos específicos de respuesta</li>
+                        <li>Resolución de todos los incidentes reportados</li>
+                    </ul>
+                    
+                    <h4>6. Modificaciones</h4>
+                    <p>La universidad se reserva el derecho de modificar estos términos en cualquier momento. Los cambios entrarán en vigor inmediatamente después de su publicación en esta plataforma.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Acerca de -->
+        <section id="acerca-de" class="section">
+            <div class="section-content">
+                <h2>Acerca de</h2>
+                
+                <div class="about-container">
+                    <div class="about-text">
+                        <h3>Nuestra misión</h3>
+                        <p>UniPanic nació con el objetivo de crear un entorno universitario más seguro y protegido para todos los miembros de nuestra comunidad. Creemos firmemente que cada estudiante tiene derecho a sentirse seguro en su campus y contar con herramientas efectivas para solicitar ayuda cuando lo necesite.</p>
+                        
+                        <h3>¿Cómo funciona?</h3>
+                        <p>Nuestro sistema permite que cualquier estudiante, desde cualquier dispositivo con acceso a internet, pueda enviar un reporte inmediato a los mediadores capacitados de la universidad. Estos profesionales evalúan la situación y movilizan los recursos necesarios para brindar asistencia.</p>
+                        
+                        <h3>Nuestro equipo</h3>
+                        <p>UniPanic está respaldado por un equipo multidisciplinario que incluye:</p>
+                        <ul>
+                            <li>Mediadores profesionales con formación en resolución de conflictos</li>
+                            <li>Personal de seguridad universitaria</li>
+                            <li>Psicólogos y consejeros estudiantiles</li>
+                            <li>Equipo técnico para mantener la plataforma funcionando de manera óptima</li>
+                        </ul>
+                        
+                        <h3>Historia</h3>
+                        <p>Este proyecto fue iniciado en 2024 como respuesta a la necesidad de crear canales directos y eficientes para reportar situaciones de emergencia en el campus. Desde entonces, hemos atendido más de 200 casos y continuamos mejorando nuestros protocolos y tecnología.</p>
+                    </div>
+                    
+                    <div class="about-stats">
+                        <div class="stat-item">
+                            <h4>95%</h4>
+                            <p>de satisfacción con el servicio</p>
+                        </div>
+                        <div class="stat-item">
+                            <h4>< 5 min</h4>
+                            <p>tiempo promedio de respuesta</p>
+                        </div>
+                        <div class="stat-item">
+                            <h4>24/7</h4>
+                            <p>disponibilidad</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <h2>UniPanic</h2>
+                <p>Sistema de Reporte Universitario</p>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Enlaces rápidos</h3>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#preguntas-frecuentes">Preguntas frecuentes</a></li>
+                    <li><a href="#ayuda">Ayuda</a></li>
+                    <li><a href="#contactanos">Contáctanos</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="#privacidad">Avisos de privacidad</a></li>
+                    <li><a href="#terminos">Términos y condiciones</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-contact">
+                <h3>Contáctanos</h3>
+                <p><i class="fas fa-envelope"></i> soporte@unipanic.edu</p>
+                <p><i class="fas fa-phone"></i> (01) 800-123-4567</p>
+            </div>
+        </div>
         
-        function limpiarMensajeErrorCodigo() {
-            errorCodigoSpan.textContent = '';
-        }
+        <div class="footer-bottom">
+            <p>&copy; 2025 UniPanic. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 
-        function limpiarMensajeErrorDescripcion() {
-            errorDescripcionSpan.textContent = '';
-        }
-
-        const form = document.getElementById('myForm');
-        const codigoEstudianteInput = document.getElementById('codigoEstudiante');
-        const errorCodigoSpan = document.getElementById('errorCodigo');
-        const descripcionInput = document.getElementById('descripcion');
-        const nombreInput = document.getElementById('nombre');
-        const errorDescripcionSpan = document.getElementById('errorDescripcion');
-        const exitoEnvioSpan = document.getElementById('exitoEnvio');
-
-        codigoEstudianteInput.addEventListener('focus', limpiarMensajeExito);
-        nombreInput.addEventListener('focus', limpiarMensajeExito);
-        descripcionInput.addEventListener('focus', limpiarMensajeExito); 
-
-        form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Evita el envío tradicional del formulario
-
-            const codigoEstudianteValor = codigoEstudianteInput.value.trim();
-            const nombreValor = document.getElementById('nombre').value;
-            const descripcionValor = descripcionInput.value.trim();
-
-            let isValid = true;
-
-            // Validar código de estudiante
-            if (codigoEstudianteValor.length !== 9 || !/^\d+$/.test(codigoEstudianteValor)) {
-                errorCodigoSpan.textContent = 'El código de estudiante debe tener exactamente 9 dígitos numéricos.';
-                isValid = false;
-            } else {
-                errorCodigoSpan.textContent = '';
-            }
-
-            // Validar descripción (no vacía)
-            if (descripcionValor === '') {
-                errorDescripcionSpan.textContent = 'La descripción no puede estar vacía.';
-                isValid = false;
-            } else {
-                errorDescripcionSpan.textContent = '';
-            }
-
-            // Si todos los campos son válidos, proceder con el envío
-            if (isValid) {
-                const formData = {
-                    codigoEstudiante: codigoEstudianteValor,
-                    nombre: nombreValor,
-                    descripcion: descripcionValor
-                };
-
-                const jsonData = JSON.stringify(formData);
-                console.log('Datos JSON a enviar:', jsonData);
-
-                fetch('http://localhost:8000/tasks/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: jsonData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Respuesta del servidor:', data);
-                    exitoEnvioSpan.textContent = 'Su reporte ha sido recibido';
-                    errorCodigoSpan.textContent = '';
-                    errorDescripcionSpan.textContent = '';
-                    document.getElementById('codigoEstudiante').value = '';
-                    document.getElementById('nombre').value = '';
-                    document.getElementById('descripcion').value = '';
-                    // Aquí puedes manejar la respuesta del servidor
-                })
-                .catch(error => {
-                    console.error('Error al enviar la petición:', error);
-                    // Aquí puedes manejar los errores de la petición
-                });
-            }
-            else {
-                limpiarMensajeExito();
-            }
-        });
-        descripcionInput.addEventListener('focus', limpiarMensajeErrorDescripcion);
-        codigoEstudianteInput.addEventListener('focus', limpiarMensajeErrorCodigo);
-    </script>
+    <script src="main.js"></script>
 </body>
 </html>
