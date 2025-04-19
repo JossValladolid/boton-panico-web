@@ -22,64 +22,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function limpiarMensajeErrorDescripcion() {
         document.getElementById('errorDescripcion').textContent = '';
     }
-
-    // Eventos de navegación
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Quitar la clase active de todos los enlaces
-            navLinks.forEach(item => item.classList.remove('active'));
-            
-            // Agregar la clase active al enlace actual
-            this.classList.add('active');
-            
-            // Obtener el ID de la sección a mostrar
-            const targetId = this.getAttribute('href').substring(1);
-            
-            // Ocultar todas las secciones
-            sections.forEach(section => section.classList.remove('active-section'));
-            
-            // Mostrar la sección seleccionada
-            document.getElementById(targetId).classList.add('active-section');
-            
-            // Cerrar el menú móvil si está abierto
-            if (navMenu.classList.contains('active')) {
-                navMenu.classList.remove('active');
-            }
-            
-            // Desplazamiento suave al inicio de la sección
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-    });
     
     // Toggle del menú móvil
     menuToggle.addEventListener('click', function() {
         navMenu.classList.toggle('active');
     });
     
-    // Formulario modal
-    if (showFormButton) {
-        showFormButton.addEventListener('click', function() {
-            formOverlay.classList.remove('hidden');
-        });
-    }
-    
-    if (closeFormButton) {
-        closeFormButton.addEventListener('click', function() {
-            formOverlay.classList.add('hidden');
-        });
-    }
-    
-    // Cerrar el modal al hacer clic fuera del formulario
-    formOverlay.addEventListener('click', function(e) {
-        if (e.target === formOverlay) {
-            formOverlay.classList.add('hidden');
-        }
-    });
     
     // Acordeón para FAQ
     accordionItems.forEach(item => {
@@ -109,6 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (codigoEstudianteInput) {
         codigoEstudianteInput.addEventListener('focus', limpiarMensajeExito);
+        codigoEstudianteInput.addEventListener('focus', limpiarMensajeErrorCodigo);
     }
     
     if (nombreInput) {
@@ -118,10 +67,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (descripcionInput) {
         descripcionInput.addEventListener('focus', limpiarMensajeExito);
         descripcionInput.addEventListener('focus', limpiarMensajeErrorDescripcion);
-    }
-    
-    if (codigoEstudianteInput) {
-        codigoEstudianteInput.addEventListener('focus', limpiarMensajeErrorCodigo);
     }
 
     if (mainForm) {
@@ -188,6 +133,48 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Eventos de navegación
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Quitar la clase active de todos los enlaces
+            navLinks.forEach(item => item.classList.remove('active'));
+            
+            // Agregar la clase active al enlace actual
+            this.classList.add('active');
+            
+            // Obtener el ID de la sección a mostrar
+            const targetId = this.getAttribute('href').substring(1);
+            
+            // Ocultar todas las secciones
+            sections.forEach(section => section.classList.remove('active-section'));
+            
+            // Mostrar la sección seleccionada
+            document.getElementById(targetId).classList.add('active-section');
+            
+            // Cerrar el menú móvil si está abierto
+            if (navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+            }
+
+            if(targetId == "enviar-reporte") {
+                limpiarMensajeErrorCodigo();
+                limpiarMensajeErrorDescripcion();
+                limpiarMensajeExito();
+                document.getElementById('codigoEstudiante').value = '';
+                document.getElementById('nombre').value = '';
+                document.getElementById('descripcion').value = '';
+            }
+            
+            // Desplazamiento suave al inicio de la sección
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    });
+
     // Formulario de contacto
     if (contactForm) {
         contactForm.addEventListener('submit', function(event) {
