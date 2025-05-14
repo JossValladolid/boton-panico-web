@@ -9,12 +9,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeFormButton = document.getElementById('close-form');
     const accordionItems = document.querySelectorAll('.accordion-item');
     const contactForm = document.getElementById('contactForm');
+    // Validación del formulario principal
+    const mainForm = document.getElementById('myForm');
+    const codigoEstudianteInput = document.getElementById('codigoEstudiante');
+    const errorCodigoSpan = document.getElementById('errorCodigo');
+    const descripcionInput = document.getElementById('descripcion');
+    const nombreInput = document.getElementById('nombre');
+    const errorDescripcionSpan = document.getElementById('errorDescripcion');
+    const exitoEnvioSpan = document.getElementById('exitoEnvio');
     
     // Funciones para el formulario principal
     function limpiarMensajeExito() {
         document.getElementById('exitoEnvio').textContent = '';
     }
-    
+
     function limpiarMensajeErrorCodigo() {
         document.getElementById('errorCodigo').textContent = '';
     }
@@ -27,7 +35,6 @@ document.addEventListener('DOMContentLoaded', function() {
     menuToggle.addEventListener('click', function() {
         navMenu.classList.toggle('active');
     });
-    
     
     // Acordeón para FAQ
     accordionItems.forEach(item => {
@@ -45,15 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
             item.classList.toggle('active');
         });
     });
-    
-    // Validación del formulario principal
-    const mainForm = document.getElementById('myForm');
-    const codigoEstudianteInput = document.getElementById('codigoEstudiante');
-    const errorCodigoSpan = document.getElementById('errorCodigo');
-    const descripcionInput = document.getElementById('descripcion');
-    const nombreInput = document.getElementById('nombre');
-    const errorDescripcionSpan = document.getElementById('errorDescripcion');
-    const exitoEnvioSpan = document.getElementById('exitoEnvio');
 
     if (codigoEstudianteInput) {
         codigoEstudianteInput.addEventListener('focus', limpiarMensajeExito);
@@ -123,7 +121,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.getElementById('nombre').value = '';
                     document.getElementById('descripcion').value = '';
                 })
-                .catch(error => {
+                .catch((error) => {
+                    exitoEnvioSpan.textContent = 'Error en el envio';
                     console.error('Error al enviar la petición:', error);
                 });
             }
