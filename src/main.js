@@ -75,7 +75,7 @@ function login() {
     .then(data => {
         console.log('Login exitoso:', data);
         localStorage.setItem('access_token', data.access_token);
-        window.location.href = 'dash.html';
+        window.location.href = 'dashboard.html';
     })
     .catch(error => {
         showError('Error: ' + error.message);
@@ -232,6 +232,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Si hay un token guardado, redirigir al dashboard
     const token = localStorage.getItem('access_token');
     if (token) {
-        window.location.href = 'dash.html';
+        window.location.href = 'dashboard.html';
     }
 });
