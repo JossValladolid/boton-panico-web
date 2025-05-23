@@ -60,9 +60,11 @@ function loadReports() {
         }
 
         reports.forEach(report => {
-            const isCanceled = report.estado === 'Cancelado';
+            // Modificado: Ahora verifica si el estado es Cancelado O Completado
+            const isInactiveState = report.estado === 'Cancelado' || report.estado === 'Completado';
             const div = document.createElement('div');
-            div.className = isCanceled ? 'report-item canceled-report' : 'report-item';
+            // Aplicar la misma clase para reportes cancelados y completados
+            div.className = isInactiveState ? 'report-item canceled-report' : 'report-item';
             div.innerHTML = `
                 <div class="report-header">
                     <span class="report-id">${report.id}</span>
@@ -71,11 +73,11 @@ function loadReports() {
                 <div class="report-description">${report.descripcion}</div>
                 <div class="report-status">Estado: ${report.estado}</div>
                 <div class="report-actions">
-                    <button class="action-button form-button" data-id="${report.id}" ${isCanceled ? 'disabled' : ''}>
+                    <button class="action-button form-button" data-id="${report.id}" ${isInactiveState ? 'disabled' : ''}>
                         Editar
                     </button>
-                    <button class="action-button cancel-button" data-id="${report.id}" ${isCanceled ? 'disabled' : ''}>
-                        ${isCanceled ? 'Cancelado' : 'Cancelar Reporte'}
+                    <button class="action-button cancel-button" data-id="${report.id}" ${isInactiveState ? 'disabled' : ''}>
+                        ${report.estado === 'Cancelado' ? 'Cancelado' : report.estado === 'Completado' ? 'Completado' : 'Cancelar Reporte'}
                     </button>
                 </div>
             `;
@@ -266,6 +268,11 @@ function setupModalEvents() {
         }
     });
 }
+
+// Actualización automática cada 3 segundos
+setInterval(() => {
+    loadReports();
+}, 3000);
 
 function setupFormEvents() {
     document.getElementById('reportForm').addEventListener('submit', e => {

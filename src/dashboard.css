@@ -322,8 +322,35 @@ main {
     font-size: 0.9rem;
 }
 
+/* Estilos para controlar el desbordamiento de texto en las descripciones */
 .report-description {
     margin-bottom: 0.75rem;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+    max-height: 150px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* Estilo para la barra de desplazamiento */
+.report-description::-webkit-scrollbar {
+    width: 5px;
+}
+
+.report-description::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.report-description::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.report-description::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 .report-status {
