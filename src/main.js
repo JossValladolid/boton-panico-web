@@ -1,205 +1,237 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Elementos del DOM
-    const sections = document.querySelectorAll('.section');
-    const navLinks = document.querySelectorAll('.nav-menu a');
-    const menuToggle = document.querySelector('.menu-toggle');
-    const navMenu = document.querySelector('.nav-menu');
-    const showFormButton = document.getElementById('show-form-button');
-    const formOverlay = document.getElementById('form-overlay');
-    const closeFormButton = document.getElementById('close-form');
-    const accordionItems = document.querySelectorAll('.accordion-item');
-    const contactForm = document.getElementById('contactForm');
-    // Validación del formulario principal
-    const mainForm = document.getElementById('myForm');
-    const codigoEstudianteInput = document.getElementById('codigoEstudiante');
-    const errorCodigoSpan = document.getElementById('errorCodigo');
-    const descripcionInput = document.getElementById('descripcion');
-    const nombreInput = document.getElementById('nombre');
-    const errorDescripcionSpan = document.getElementById('errorDescripcion');
-    const exitoEnvioSpan = document.getElementById('exitoEnvio');
-    
-    // Funciones para el formulario principal
-    function limpiarMensajeExito() {
-        document.getElementById('exitoEnvio').textContent = '';
+// Configuración de API
+const API_URL = 'http://localhost:8000'; // Cambia esto según donde esté desplegada tu API
+
+// Function to show login view
+function showLoginView() {
+    document.getElementById('loginView').style.display = 'block';
+    document.getElementById('forgotView').style.display = 'none';
+    document.getElementById('confirmationView').style.display = 'none';
+    document.getElementById('registerView').style.display = 'none';
+}
+
+// Function to show forgot password view
+function showForgotView() {
+    document.getElementById('loginView').style.display = 'none';
+    document.getElementById('forgotView').style.display = 'block';
+    document.getElementById('confirmationView').style.display = 'none';
+    document.getElementById('registerView').style.display = 'none';
+}
+
+// Function to show register view
+function showRegisterView() {
+    document.getElementById('loginView').style.display = 'none';
+    document.getElementById('forgotView').style.display = 'none';
+    document.getElementById('confirmationView').style.display = 'none';
+    document.getElementById('registerView').style.display = 'block';
+}
+
+// Function to show confirmation view
+function showConfirmationView() {
+    document.getElementById('loginView').style.display = 'none';
+    document.getElementById('forgotView').style.display = 'none';
+    document.getElementById('confirmationView').style.display = 'block';
+    document.getElementById('registerView').style.display = 'none';
+}
+
+// Login function - connects to API
+function login() {
+    const codigo = document.getElementById('codigo').value;
+    const password = document.getElementById('password').value;
+
+    clearError();
+
+    localStorage.removeItem('access_token');
+
+    if (!codigo || !password) {
+        showError('Por favor, complete todos los campos');
+        return;
     }
 
-    function limpiarMensajeErrorCodigo() {
-        document.getElementById('errorCodigo').textContent = '';
-    }
+    const loginData = {
+        username: codigo,
+        password: password
+    };
 
-    function limpiarMensajeErrorDescripcion() {
-        document.getElementById('errorDescripcion').textContent = '';
-    }
-    
-    // Toggle del menú móvil
-    menuToggle.addEventListener('click', function() {
-        navMenu.classList.toggle('active');
+    document.getElementById('loginButton').disabled = true;
+    document.getElementById('loginButton').textContent = 'CARGANDO...';
+
+    fetch(`${API_URL}/token`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(loginData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            if (response.status === 401) {
+                throw new Error('Credenciales incorrectas');
+            } else {
+                throw new Error('Error del servidor: ' + response.status);
+            }
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Login exitoso:', data);
+        localStorage.setItem('access_token', data.access_token);
+        window.location.href = 'dash.html';
+    })
+    .catch(error => {
+        showError('Error: ' + error.message);
+    })
+    .finally(() => {
+        document.getElementById('loginButton').disabled = false;
+        document.getElementById('loginButton').textContent = 'INGRESAR';
     });
+}
+
+// Helper function to show errors
+function showError(message) {
+    // Check if error element exists, if not create it
+    let errorElement = document.getElementById('loginError');
     
-    // Acordeón para FAQ
-    accordionItems.forEach(item => {
-        const header = item.querySelector('.accordion-header');
+    if (!errorElement) {
+        errorElement = document.createElement('p');
+        errorElement.id = 'loginError';
+        errorElement.style.color = 'red';
+        errorElement.style.fontSize = '0.9rem';
+        errorElement.style.marginTop = '10px';
         
-        header.addEventListener('click', function() {
-            // Cerrar todos los otros acordeones
-            accordionItems.forEach(otherItem => {
-                if (otherItem !== item) {
-                    otherItem.classList.remove('active');
-                }
+        // Insert after login button
+        const loginButton = document.getElementById('loginButton');
+        if (loginButton) {
+            loginButton.parentNode.insertBefore(errorElement, loginButton.nextSibling);
+        } else {
+            // Fallback insert location
+            document.querySelector('.login-container').appendChild(errorElement);
+        }
+    }
+    
+    errorElement.textContent = message;
+    errorElement.style.display = 'block';
+}
+
+// Helper function to clear errors
+function clearError() {
+    const errorElement = document.getElementById('loginError');
+    if (errorElement) {
+        errorElement.textContent = '';
+        errorElement.style.display = 'none';
+    }
+}
+
+// Improved forget password function - could be connected to API
+function sendRecovery() {
+    const email = document.getElementById('email').value;
+    
+    if (!email || !email.includes('@')) {
+        alert('Por favor, ingrese un correo electrónico válido');
+        return;
+    }
+    
+    // Here you would typically call an API endpoint for password reset
+    // For now, we'll just show the confirmation view
+    showConfirmationView();
+    
+    // TODO: Implement API call for password recovery
+    // Example:
+    // fetch(`${API_URL}/reset-password`, {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({ email: email })
+    // })
+    // .then(response => response.json())
+    // .then(data => {
+    //     showConfirmationView();
+    // })
+    // .catch(error => {
+    //     alert('Error: ' + error.message);
+    // });
+}
+
+// Register function - connects to API
+function register() {
+    const codigo = document.getElementById('newCodigo').value;
+    const email = document.getElementById('newEmail').value;
+    const password = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    
+    // Validate fields
+    if (!codigo || !email || !password || !confirmPassword) {
+        alert('Por favor, complete todos los campos');
+        return;
+    }
+    
+    if (password !== confirmPassword) {
+        alert('Las contraseñas no coinciden');
+        return;
+    }
+    
+    // Validate email format
+    if (!email.includes('@') || !email.includes('.')) {
+        alert('Por favor, ingrese un correo electrónico válido');
+        return;
+    }
+    
+    // Create user data object for API
+    const userData = {
+        codigo: codigo,
+        correo: email,  // CORREGIDO: era 'nombre' ahora es 'email'
+        contrasena: password
+    };
+    
+    console.log('Datos a enviar:', userData); // Para debugging
+    
+    // Disable register button
+    document.getElementById('registerButton').disabled = true;
+    document.getElementById('registerButton').textContent = 'REGISTRANDO...';
+    
+    // Send request to API
+    fetch(`${API_URL}/usuarios/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData)
+    })
+    .then(response => {
+        console.log('Response status:', response.status); // Para debugging
+        if (!response.ok) {
+            return response.json().then(errorData => {
+                throw new Error(errorData.detail || 'Error en el registro');
             });
-            
-            // Alternar el estado del acordeón actual
-            item.classList.toggle('active');
-        });
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Registro exitoso:', data); // Para debugging
+        alert('Usuario registrado exitosamente');
+        showLoginView();
+        // Limpiar campos del formulario
+        document.getElementById('newCodigo').value = '';
+        document.getElementById('newEmail').value = '';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmPassword').value = '';
+    })
+    .catch(error => {
+        console.error('Error en registro:', error); // Para debugging
+        alert('Error al registrar usuario: ' + error.message);
+    })
+    .finally(() => {
+        // Re-enable register button
+        document.getElementById('registerButton').disabled = false;
+        document.getElementById('registerButton').textContent = 'REGISTRARSE';
     });
+}
 
-    if (codigoEstudianteInput) {
-        codigoEstudianteInput.addEventListener('focus', limpiarMensajeExito);
-        codigoEstudianteInput.addEventListener('focus', limpiarMensajeErrorCodigo);
-    }
-    
-    if (nombreInput) {
-        nombreInput.addEventListener('focus', limpiarMensajeExito);
-    }
-    
-    if (descripcionInput) {
-        descripcionInput.addEventListener('focus', limpiarMensajeExito);
-        descripcionInput.addEventListener('focus', limpiarMensajeErrorDescripcion);
-    }
-
-    if (mainForm) {
-        mainForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // Evita el envío tradicional del formulario
-
-            const codigoEstudianteValor = codigoEstudianteInput.value.trim();
-            const nombreValor = document.getElementById('nombre').value;
-            const descripcionValor = descripcionInput.value.trim();
-
-            let isValid = true;
-
-            // Validar código de estudiante
-            if (codigoEstudianteValor.length !== 9 || !/^\d+$/.test(codigoEstudianteValor)) {
-                errorCodigoSpan.textContent = 'El código de estudiante debe tener exactamente 9 dígitos numéricos.';
-                isValid = false;
-            } else {
-                errorCodigoSpan.textContent = '';
-            }
-
-            // Validar descripción (no vacía)
-            if (descripcionValor === '') {
-                errorDescripcionSpan.textContent = 'La descripción no puede estar vacía.';
-                isValid = false;
-            } else {
-                errorDescripcionSpan.textContent = '';
-            }
-
-            // Si todos los campos son válidos, proceder con el envío
-            if (isValid) {
-                const formData = {
-                    codigoEstudiante: codigoEstudianteValor,
-                    nombre: nombreValor,
-                    descripcion: descripcionValor
-                };
-
-                const jsonData = JSON.stringify(formData);
-                console.log('Datos JSON a enviar:', jsonData);
-
-                fetch('http://localhost:8000/tasks/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: jsonData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Respuesta del servidor:', data);
-                    exitoEnvioSpan.textContent = 'Su reporte ha sido recibido';
-                    errorCodigoSpan.textContent = '';
-                    errorDescripcionSpan.textContent = '';
-                    document.getElementById('codigoEstudiante').value = '';
-                    document.getElementById('nombre').value = '';
-                    document.getElementById('descripcion').value = '';
-                })
-                .catch((error) => {
-                    exitoEnvioSpan.textContent = 'Error en el envio';
-                    console.error('Error al enviar la petición:', error);
-                });
-            }
-            else {
-                limpiarMensajeExito();
-            }
-        });
-    }
-    
-    // Eventos de navegación
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Quitar la clase active de todos los enlaces
-            navLinks.forEach(item => item.classList.remove('active'));
-            
-            // Agregar la clase active al enlace actual
-            this.classList.add('active');
-            
-            // Obtener el ID de la sección a mostrar
-            const targetId = this.getAttribute('href').substring(1);
-            
-            // Ocultar todas las secciones
-            sections.forEach(section => section.classList.remove('active-section'));
-            
-            // Mostrar la sección seleccionada
-            document.getElementById(targetId).classList.add('active-section');
-            
-            // Cerrar el menú móvil si está abierto
-            if (navMenu.classList.contains('active')) {
-                navMenu.classList.remove('active');
-            }
-
-            if(targetId == "enviar-reporte") {
-                limpiarMensajeErrorCodigo();
-                limpiarMensajeErrorDescripcion();
-                limpiarMensajeExito();
-                document.getElementById('codigoEstudiante').value = '';
-                document.getElementById('nombre').value = '';
-                document.getElementById('descripcion').value = '';
-            }
-            
-            // Desplazamiento suave al inicio de la sección
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-    });
-
-    // Formulario de contacto
-    if (contactForm) {
-        contactForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            const nombre = document.getElementById('contactNombre').value.trim();
-            const email = document.getElementById('contactEmail').value.trim();
-            const asunto = document.getElementById('contactAsunto').value.trim();
-            const mensaje = document.getElementById('contactMensaje').value.trim();
-            
-            if (nombre && email && asunto && mensaje) {
-                // Aquí iría el código para enviar el formulario
-                // Por ahora, solo mostraremos un mensaje de éxito
-                document.getElementById('contactExito').textContent = 'Mensaje enviado correctamente. Nos pondremos en contacto contigo pronto.';
-                
-                // Limpiar campos
-                document.getElementById('contactNombre').value = '';
-                document.getElementById('contactEmail').value = '';
-                document.getElementById('contactAsunto').value = '';
-                document.getElementById('contactMensaje').value = '';
-                
-                // Limpiar mensaje después de 5 segundos
-                setTimeout(() => {
-                    document.getElementById('contactExito').textContent = '';
-                }, 5000);
-            }
-        });
+// Verificar si el usuario ya está logueado al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    // Si hay un token guardado, redirigir al dashboard
+    const token = localStorage.getItem('access_token');
+    if (token) {
+        window.location.href = 'dash.html';
     }
 });
