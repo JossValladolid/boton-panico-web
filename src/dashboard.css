@@ -27,7 +27,7 @@
 }
 
 body {
-      font-family: 'Lato', sans-serif;
+    font-family: 'Lato', sans-serif;
     line-height: 1.6;
     color: var(--text-color);
     background-color: var(--light-gray);
@@ -227,6 +227,11 @@ main {
     border-bottom: 1px solid var(--medium-gray);
     padding-bottom: 1rem;
     margin-bottom: 2rem;
+}
+
+.section h3 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
 }
 
 /* Dashboard */
@@ -632,7 +637,7 @@ main {
 }
 
 .legal-content h4 {
-    color: var(--dark-gray);
+    color: var(--primary-color);
     margin-top: 1.5rem;
     margin-bottom: 0.75rem;
 }
@@ -658,6 +663,7 @@ main {
 .about-text {
     flex: 2;
     min-width: 300px;
+    
 }
 
 .about-stats {
