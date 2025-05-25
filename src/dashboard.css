@@ -27,7 +27,7 @@
 }
 
 body {
-  font-family: Lato, 'sans-serif';
+  font-family: sans-serif;
   line-height: 1.6;
   color: var(--text-color);
   background-color: var(--light-gray);
@@ -340,7 +340,7 @@ main {
 
 .report-status {
   margin-bottom: 1rem;
-  font-style: italic;
+  font-family: sans-serif;
   color: var(--dark-gray);
 }
 
@@ -539,14 +539,10 @@ main {
 
 /* Botón de logout en header */
 .logout-btn {
-  color: white;
-  padding: 0.5rem 1rem;
+  color: #fff;
   background-color: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 4px;
-  font-size: 0.9rem;
   cursor: pointer;
-  transition: var(--transition);
+  border: none;
 }
 
 .logout-btn:hover {
@@ -731,7 +727,7 @@ main {
   border: 1px solid var(--medium-gray);
   border-radius: 4px;
   font-size: 0.9rem;
-  font-family: inherit;
+  font-family: sans-serif;
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
@@ -965,7 +961,7 @@ main {
   padding: 0.75rem;
   border: 1px solid var(--medium-gray);
   border-radius: 4px;
-  font-family: inherit;
+  font-family: sans-serif;
 }
 
 .form-group textarea {
