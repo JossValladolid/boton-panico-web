@@ -57,7 +57,7 @@
             </div>
         </section>
 
-        <!-- Sección Preguntas Frecuentes -->
+        <!-- Preguntas Frecuentes -->
         <section id="preguntas-frecuentes" class="section">
             <div class="section-content">
                 <h2>Preguntas Frecuentes</h2>
@@ -290,16 +290,100 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal del Formulario Detallado -->
+    <div id="detailed-form-modal" class="modal">
+        <div class="modal-content detailed-form-modal-content">
+            <div class="modal-header">
+                <h2>FORMULARIO DE DENUNCIA ESTUDIANTIL</h2>
+                <span class="close-detailed-modal">&times;</span>
+            </div>
+            
+            <div class="form-description">
+                <strong>Descripción:</strong> <span id="form-description-text"></span>
+            </div>
+            
+            <form id="detailed-form" class="detailed-form">
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="nombres">*Nombre(s)</label>
+                        <input type="text" id="nombres" name="nombres" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="apellido-paterno">*Apellido Paterno</label>
+                        <input type="text" id="apellido-paterno" name="apellido-paterno" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido-materno">*Apellido Materno</label>
+                        <input type="text" id="apellido-materno" name="apellido-materno" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="codigo-udg">*Código UDG</label>
+                        <input type="text" id="codigo-udg" name="codigo-udg" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha-nacimiento">*Fecha de Nacimiento</label>
+                        <input type="date" id="fecha-nacimiento" name="fecha-nacimiento" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="descripcion-detallada">*Descripción detallada de la situación</label>
+                        <textarea id="descripcion-detallada" name="descripcion-detallada" rows="6" required></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
     
     <!-- Modal de confirmación de cancelación -->
     <div id="cancel-confirmation-modal" class="modal">
         <div class="modal-content confirmation-modal">
-            <h3>Cancelacion Voluntaria</h3>
-            <p>¿Está de acuerdo con cancelar el reporte?</p>
-            <p>Una vez cancelado, se detendrá todo proceso y se guardará como decisión suya el no continuar.</p>
-            <div class="confirmation-buttons">
-                <button id="confirm-cancel" class="confirm-button">Continuar</button>
-                <button id="abort-cancel" class="abort-button">Cancelar</button>
+            <div class="modal-header">
+                <h3>Cancelacion Voluntaria</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>¿Está de acuerdo con cancelar el reporte?</p>
+                <p>Una vez cancelado, se detendrá todo proceso y se guardará como decisión suya el no continuar.</p>
+                <div class="confirmation-buttons">
+                    <button id="confirm-cancel" class="confirm-button">Continuar</button>
+                    <button id="abort-cancel" class="abort-button">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para solicitar razón de cancelación -->
+    <div id="cancel-reason-modal" class="modal">
+        <div class="modal-content confirmation-modal">
+            <div class="modal-header">
+                <h3>Razón de Cancelación</h3>
+                <span class="close-reason-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Por favor, proporcione la razón por la cual desea cancelar este reporte:</p>
+                <form id="cancel-reason-form">
+                    <div class="form-group">
+                        <textarea id="cancel-reason-text" name="cancel-reason-text" placeholder="Escriba aquí la razón de la cancelación..." rows="4" required></textarea>
+                        <span id="cancel-reason-error" class="error-message"></span>
+                    </div>
+                    <div class="confirmation-buttons">
+                        <button type="submit" class="confirm-button">Confirmar Cancelación</button>
+                        <button type="button" id="abort-reason-cancel" class="abort-button">Cancelar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
