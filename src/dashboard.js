@@ -147,13 +147,10 @@ async function loadReports() {
 
 async function submitReport(descripcion) {
     try {
-        // Si hay activeReportId, es una edición; si no, es un nuevo reporte
         const isEdit = activeReportId !== null;
-        const url = isEdit ? `${API_URL}/my-tasks/${activeReportId}` : `${API_URL}/my-tasks/`;
-        const method = isEdit ? 'PUT' : 'POST';
 
-        const response = await authenticatedFetch(url, {
-            method: method,
+        const response = await authenticatedFetch(`${API_URL}/my-tasks/`, {
+            method: 'POST',
             body: JSON.stringify({ descripcion })
         });
         
@@ -324,6 +321,17 @@ function setupModalEvents() {
 
 function setupFormEvents() {
     document.getElementById('reportForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const descripcion = document.getElementById('descripcion').value;
+        if (!descripcion.trim()) {
+            document.getElementById('errorDescripcion').textContent = 'La descripción es obligatoria';
+            return;
+        }
+        document.getElementById('errorDescripcion').textContent = '';
+        submitReport(descripcion);
+    });
+
+    document.getElementById('formularioForm').addEventListener('submit', e => {
         e.preventDefault();
         const descripcion = document.getElementById('descripcion').value;
         if (!descripcion.trim()) {
