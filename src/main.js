@@ -121,37 +121,6 @@ function clearError() {
     }
 }
 
-// Improved forget password function - could be connected to API
-function sendRecovery() {
-    const email = document.getElementById('email').value;
-    
-    if (!email || !email.includes('@')) {
-        alert('Por favor, ingrese un correo electrónico válido');
-        return;
-    }
-    
-    // Here you would typically call an API endpoint for password reset
-    // For now, we'll just show the confirmation view
-    showConfirmationView();
-    
-    // TODO: Implement API call for password recovery
-    // Example:
-    // fetch(`${API_URL}/reset-password`, {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({ email: email })
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //     showConfirmationView();
-    // })
-    // .catch(error => {
-    //     alert('Error: ' + error.message);
-    // });
-}
-
 // Register function - connects to API
 function register() {
     const codigo = document.getElementById('newCodigo').value;
