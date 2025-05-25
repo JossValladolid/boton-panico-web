@@ -322,11 +322,6 @@ function setupModalEvents() {
     });
 }
 
-// Actualización automática cada 3 segundos
-setInterval(() => {
-    loadReports();
-}, 3000);
-
 function setupFormEvents() {
     document.getElementById('reportForm').addEventListener('submit', e => {
         e.preventDefault();
@@ -374,5 +369,5 @@ setInterval(async () => {
 setInterval(() => {
     if (autoUpdate) {
         loadReports();
-    }
+    } 
 }, 3000);
