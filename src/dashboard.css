@@ -27,15 +27,6 @@
 }
 
 body {
-<<<<<<< HEAD
-    font-family: 'Lato', sans-serif;
-    line-height: 1.6;
-    color: var(--text-color);
-    background-color: var(--light-gray);
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-=======
   font-family: Lato, 'sans-serif';
   line-height: 1.6;
   color: var(--text-color);
@@ -48,7 +39,6 @@ body {
 /* Clase para bloquear scroll cuando modal está abierto */
 body.modal-open {
   overflow: hidden;
->>>>>>> 1d0444e8366a8f89e44f22ea1ddbd6fb1b966803
 }
 
 a {
@@ -1081,15 +1071,9 @@ main {
 }
 
 .legal-content h4 {
-<<<<<<< HEAD
     color: var(--primary-color);
     margin-top: 1.5rem;
     margin-bottom: 0.75rem;
-=======
-  color: var(--dark-gray);
-  margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
->>>>>>> 1d0444e8366a8f89e44f22ea1ddbd6fb1b966803
 }
 
 .legal-content ul {
@@ -1111,14 +1095,8 @@ main {
 }
 
 .about-text {
-<<<<<<< HEAD
-    flex: 2;
-    min-width: 300px;
-    
-=======
   flex: 2;
   min-width: 300px;
->>>>>>> 1d0444e8366a8f89e44f22ea1ddbd6fb1b966803
 }
 
 .about-stats {
