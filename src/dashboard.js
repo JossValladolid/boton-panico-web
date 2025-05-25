@@ -2,8 +2,67 @@ const API_URL = 'http://localhost:8000';
 
 let activeReportId = null;
 let activeSection = 'home';
+let autoUpdate = true;
 
-document.addEventListener('DOMContentLoaded', () => {
+// Función centralizada para manejar peticiones con manejo de errores de autenticación
+async function authenticatedFetch(url, options = {}) {
+    const token = localStorage.getItem('access_token');
+    
+    if (!token) {
+        handleAuthError();
+        return null;
+    }
+
+    const defaultOptions = {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            ...options.headers
+        }
+    };
+
+    const finalOptions = { ...defaultOptions, ...options };
+
+    try {
+        const response = await fetch(url, finalOptions);
+        
+        // Manejar errores de autenticación de forma centralizada
+        if (response.status === 401 || response.status === 403) {
+            console.warn('Token expirado o inválido, cerrando sesión...');
+            handleAuthError();
+            return null;
+        }
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        return response;
+    } catch (error) {
+        console.error('Error en petición autenticada:', error);
+        throw error;
+    }
+}
+
+// Función centralizada para manejar errores de autenticación
+function handleAuthError() {
+    localStorage.removeItem('access_token');
+    alert('Tu sesión ha expirado. Serás redirigido al login.');
+    window.location.href = 'index.html';
+}
+
+// Función para verificar si el token sigue siendo válido
+async function verifyTokenValidity() {
+    try {
+        const response = await authenticatedFetch(`${API_URL}/me`);
+        return response !== null;
+    } catch (error) {
+        console.error('Error verificando token:', error);
+        return false;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('access_token');
 
     if (!token) {
@@ -11,22 +70,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    fetch(`${API_URL}/me`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-    .then(res => {
-        if (!res.ok) throw new Error('Token inválido');
-        return res.json();
-    })
-    .then(user => {
+    try {
+        const response = await authenticatedFetch(`${API_URL}/me`);
+        if (!response) return; // Ya manejado por authenticatedFetch
+        
+        const user = await response.json();
         document.getElementById('username').textContent = `Usuario: ${user.correo} (${user.codigo})`;
         loadReports();
-    })
-    .catch(() => {
-        logout();
-    });
+    } catch (error) {
+        console.error('Error al obtener información del usuario:', error);
+        handleAuthError();
+    }
 
     setupNavigationEvents();
     setupModalEvents();
@@ -39,20 +93,15 @@ function logout() {
     window.location.href = 'index.html';
 }
 
-function loadReports() {
-    const token = localStorage.getItem('access_token');
+async function loadReports() {
     const reportsContainer = document.getElementById('reports-list');
 
-    fetch(`${API_URL}/my-tasks/`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-    .then(res => {
-        if (!res.ok) throw new Error('Error al cargar reportes');
-        return res.json();
-    })
-    .then(reports => {
+    try {
+        const response = await authenticatedFetch(`${API_URL}/my-tasks/`);
+        if (!response) return; // Ya manejado por authenticatedFetch
+        
+        const reports = await response.json();
+        
         reportsContainer.innerHTML = '';
         if (reports.length === 0) {
             reportsContainer.innerHTML = '<p>No hay reportes pendientes</p>';
@@ -60,11 +109,12 @@ function loadReports() {
         }
 
         reports.forEach(report => {
-            // Modificado: Ahora verifica si el estado es Cancelado O Completado
-            const isInactiveState = report.estado === 'Cancelado' || report.estado === 'Completado';
+            const isDisabled = report.estado === 'Cancelado' || report.estado === 'Completado';
+            const buttonLabel = report.estado === 'Completado' ? 'Completado' :
+                                report.estado === 'Cancelado' ? 'Cancelado' : 'Cancelar Reporte';
+
             const div = document.createElement('div');
-            // Aplicar la misma clase para reportes cancelados y completados
-            div.className = isInactiveState ? 'report-item canceled-report' : 'report-item';
+            div.className = isDisabled ? 'report-item canceled-report' : 'report-item';
             div.innerHTML = `
                 <div class="report-header">
                     <span class="report-id">${report.id}</span>
@@ -73,21 +123,15 @@ function loadReports() {
                 <div class="report-description">${report.descripcion}</div>
                 <div class="report-status">Estado: ${report.estado}</div>
                 <div class="report-actions">
-                    <button class="action-button form-button" data-id="${report.id}" ${isInactiveState ? 'disabled' : ''}>
-                        Editar
+                    <button class="action-button form-button" data-id="${report.id}" ${isDisabled ? 'disabled' : ''}>
+                        Formulario
                     </button>
-                    <button class="action-button cancel-button" data-id="${report.id}" ${isInactiveState ? 'disabled' : ''}>
-                        ${report.estado === 'Cancelado' ? 'Cancelado' : report.estado === 'Completado' ? 'Completado' : 'Cancelar Reporte'}
+                    <button class="action-button cancel-button" data-id="${report.id}" ${isDisabled ? 'disabled' : ''}>
+                        ${buttonLabel}
                     </button>
                 </div>
             `;
             reportsContainer.appendChild(div);
-        });
-
-        document.querySelectorAll('.form-button:not([disabled])').forEach(btn => {
-            btn.addEventListener('click', () => {
-                editReport(btn.dataset.id);
-            });
         });
 
         document.querySelectorAll('.cancel-button:not([disabled])').forEach(btn => {
@@ -95,34 +139,28 @@ function loadReports() {
                 confirmCancelReport(btn.dataset.id);
             });
         });
-    })
-    .catch(err => {
-        console.error('Error al cargar reportes:', err);
+    } catch (error) {
+        console.error('Error al cargar reportes:', error);
         reportsContainer.innerHTML = '<p>Error al cargar los reportes</p>';
-    });
+    }
 }
 
-function submitReport(descripcion) {
-    const token = localStorage.getItem('access_token');
-    
-    // Si hay activeReportId, es una edición; si no, es un nuevo reporte
-    const isEdit = activeReportId !== null;
-    const url = isEdit ? `${API_URL}/my-tasks/${activeReportId}` : `${API_URL}/my-tasks/`;
-    const method = isEdit ? 'PUT' : 'POST';
+async function submitReport(descripcion) {
+    try {
+        // Si hay activeReportId, es una edición; si no, es un nuevo reporte
+        const isEdit = activeReportId !== null;
+        const url = isEdit ? `${API_URL}/my-tasks/${activeReportId}` : `${API_URL}/my-tasks/`;
+        const method = isEdit ? 'PUT' : 'POST';
 
-    fetch(url, {
-        method: method,
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ descripcion })
-    })
-    .then(res => {
-        if (!res.ok) throw new Error(`No se pudo ${isEdit ? 'actualizar' : 'enviar'} el reporte`);
-        return res.json();
-    })
-    .then(() => {
+        const response = await authenticatedFetch(url, {
+            method: method,
+            body: JSON.stringify({ descripcion })
+        });
+        
+        if (!response) return; // Ya manejado por authenticatedFetch
+        
+        await response.json();
+        
         document.getElementById('exitoEnvio').textContent = 
             isEdit ? 'Reporte actualizado con éxito' : 'Reporte enviado con éxito';
         document.getElementById('reportForm').reset();
@@ -134,33 +172,27 @@ function submitReport(descripcion) {
         setTimeout(() => {
             document.getElementById('report-modal').style.display = 'none';
             document.getElementById('exitoEnvio').textContent = '';
-        }, 2000);
-    })
-    .catch(err => {
-        console.error('Error:', err);
+        }, 1000);
+    } catch (error) {
+        console.error('Error:', error);
         document.getElementById('exitoEnvio').textContent = 
-            `Error al ${isEdit ? 'actualizar' : 'enviar'} el reporte.`;
-    });
+            `Error al ${activeReportId ? 'actualizar' : 'enviar'} el reporte.`;
+    }
 }
 
-function editReport(id) {
-    const token = localStorage.getItem('access_token');
-    fetch(`${API_URL}/my-tasks/${id}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-    })
-    .then(res => {
-        if (!res.ok) throw new Error('No se pudo obtener el reporte');
-        return res.json();
-    })
-    .then(report => {
+async function editReport(id) {
+    try {
+        const response = await authenticatedFetch(`${API_URL}/my-tasks/${id}`);
+        if (!response) return; // Ya manejado por authenticatedFetch
+        
+        const report = await response.json();
         document.getElementById('descripcion').value = report.descripcion;
         activeReportId = id;
         document.getElementById('report-modal').style.display = 'block';
-    })
-    .catch(err => {
-        console.error('Error al obtener el reporte:', err);
+    } catch (error) {
+        console.error('Error al obtener el reporte:', error);
         alert('Error al cargar el reporte para editar');
-    });
+    }
 }
 
 function confirmCancelReport(id) {
@@ -168,45 +200,35 @@ function confirmCancelReport(id) {
     document.getElementById('cancel-confirmation-modal').style.display = 'block';
 }
 
-function cancelReport(id) {
-    const token = localStorage.getItem('access_token');
-    
-    // Primero obtener el reporte actual
-    fetch(`${API_URL}/my-tasks/${id}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-    })
-    .then(res => {
-        if (!res.ok) throw new Error('No se pudo obtener el reporte');
-        return res.json();
-    })
-    .then(task => {
+async function cancelReport(id) {
+    try {
+        // Primero obtener el reporte actual
+        const getResponse = await authenticatedFetch(`${API_URL}/my-tasks/${id}`);
+        if (!getResponse) return; // Ya manejado por authenticatedFetch
+        
+        const task = await getResponse.json();
+        
         // Actualizar solo el estado a "Cancelado"
-        return fetch(`${API_URL}/my-tasks/${id}`, {
+        const updateResponse = await authenticatedFetch(`${API_URL}/my-tasks/${id}`, {
             method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
             body: JSON.stringify({
                 descripcion: task.descripcion,
                 estado: "Cancelado"
             })
         });
-    })
-    .then(res => {
-        if (!res.ok) throw new Error('No se pudo cancelar el reporte');
-        return res.json();
-    })
-    .then(() => {
+        
+        if (!updateResponse) return; // Ya manejado por authenticatedFetch
+        
+        await updateResponse.json();
+        
         activeReportId = null;
         loadReports();
         document.getElementById('cancel-confirmation-modal').style.display = 'none';
-    })
-    .catch(err => {
-        console.error('Error al cancelar reporte:', err);
+    } catch (error) {
+        console.error('Error al cancelar reporte:', error);
         alert('Error al cancelar el reporte');
         document.getElementById('cancel-confirmation-modal').style.display = 'none';
-    });
+    }
 }
 
 function setupNavigationEvents() {
@@ -267,6 +289,37 @@ function setupModalEvents() {
             }
         }
     });
+
+    document.addEventListener('keydown', (e) => {
+        const reportModal = document.getElementById('report-modal');
+        const helpModal = document.getElementById('help-modal');
+
+        if (e.key === 'Enter' && reportModal.style.display === 'block') {
+            e.preventDefault();
+            document.getElementById('reportForm').dispatchEvent(new Event('submit'));
+        }
+
+        if (e.key === 'Escape') {
+            if (reportModal.style.display === 'block') {
+                reportModal.style.display = 'none';
+                activeReportId = null;
+                document.getElementById('reportForm').reset();
+            }
+            if (helpModal.style.display === 'block') {
+                helpModal.style.display = 'none';
+            }
+        }
+    });
+
+    document.addEventListener("selectionchange", () => {
+        const selection = document.getSelection();
+        if (selection && selection.toString().length > 0) {
+            autoUpdate = false;
+        }
+        else {
+            autoUpdate = true;
+        }
+    });
 }
 
 // Actualización automática cada 3 segundos
@@ -305,3 +358,21 @@ function setupAccordion() {
         });
     });
 }
+
+// Verificar periódicamente la validez del token
+setInterval(async () => {
+    if (autoUpdate) {
+        // Verificar token cada 30 segundos
+        const isValid = await verifyTokenValidity();
+        if (isValid) {
+            loadReports();
+        }
+    }
+}, 30000);
+
+// Actualizar reportes cada 3 segundos como antes
+setInterval(() => {
+    if (autoUpdate) {
+        loadReports();
+    }
+}, 3000);
