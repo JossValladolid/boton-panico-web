@@ -118,6 +118,7 @@ function closeActiveModal() {
         existingFormData = null
         document.getElementById("detailed-form").reset()
         enableFormSubmission()
+        resetFormToEditable()
         break
       case "cancel-confirmation-modal":
         break
@@ -148,6 +149,57 @@ function enableFormSubmission() {
     submitButton.textContent = "Enviar"
     submitButton.style.backgroundColor = ""
     submitButton.style.cursor = ""
+  }
+}
+
+function resetFormToEditable() {
+  // Remover mensaje de información si existe
+  const infoMessage = document.getElementById("form-info-message")
+  if (infoMessage) {
+    infoMessage.remove()
+  }
+
+  // Habilitar todos los campos del formulario
+  const formInputs = document.querySelectorAll("#detailed-form input, #detailed-form textarea")
+  formInputs.forEach((input) => {
+    input.disabled = false
+    input.style.backgroundColor = ""
+    input.style.color = ""
+  })
+}
+
+function makeFormReadOnly() {
+  // Deshabilitar todos los campos del formulario
+  const formInputs = document.querySelectorAll("#detailed-form input, #detailed-form textarea")
+  formInputs.forEach((input) => {
+    input.disabled = true
+    input.style.backgroundColor = "#f5f5f5"
+    input.style.color = "#666"
+  })
+
+  // Deshabilitar botón de envío
+  disableFormSubmission()
+
+  // Agregar mensaje informativo
+  const formActions = document.querySelector(".form-actions")
+  if (formActions && !document.getElementById("form-info-message")) {
+    const infoMessage = document.createElement("div")
+    infoMessage.id = "form-info-message"
+    infoMessage.style.cssText = `
+      background: #e3f2fd;
+      border: 1px solid #2196f3;
+      border-radius: 4px;
+      padding: 10px;
+      margin-bottom: 15px;
+      color: #1976d2;
+      font-size: 14px;
+      text-align: center;
+    `
+    infoMessage.innerHTML = `
+      <i class="fas fa-info-circle"></i> 
+      Este formulario ya ha sido enviado y no puede ser modificado.
+    `
+    formActions.parentNode.insertBefore(infoMessage, formActions)
   }
 }
 
@@ -203,9 +255,11 @@ async function loadReports() {
       const isPending = report.estado === "Pendiente";
       const isCompleted = report.estado === "Completado";
       const isActive = report.estado === "Activo";
-      // Solo bloquea todo el bloque si es cancelado o completado
+      const isCanceled = report.estado === "Cancelado";
+      
+      // Solo bloquea todo el bloque si es cancelado
       let reportClass = "report-item";
-      if (report.estado === "Cancelado") {
+      if (isCanceled) {
         reportClass += " canceled-report";
       } else if (isCompleted) {
         reportClass += " completed-report";
@@ -229,7 +283,7 @@ async function loadReports() {
         <div class="report-status">Estado: ${report.estado}</div>
       `;
 
-      if (report.estado === "Cancelado" && report.razon && report.razon.trim()) {
+      if (isCanceled && report.razon && report.razon.trim()) {
         reportHTML += `
           <div class="report-reason">
             <strong>Razón de cancelación:</strong> ${report.razon}
@@ -237,14 +291,14 @@ async function loadReports() {
         `;
       }
 
-      // Botón Formulario: solo deshabilitado si NO es pendiente ni completado
+      // Botón Formulario: habilitado para Pendiente y Completado, deshabilitado para otros estados
       reportHTML += `
         <div class="report-actions">
-            <button class="action-button form-button${isCompleted ? " completed" : ""}" data-id="${report.id}" ${isPending || isCompleted ? "" : "disabled"}>
+            <button class="action-button form-button${isCompleted ? " completed" : ""}" data-id="${report.id}" ${(isPending || isCompleted) ? "" : "disabled"}>
                 ${buttonLabel}
             </button>
             <button class="action-button cancel-button" data-id="${report.id}" ${(isPending || isActive) ? "" : "disabled"}>
-                ${report.estado === "Cancelado" ? "Cancelado" : "Cancelar Reporte"}
+                ${isCanceled ? "Cancelado" : "Cancelar Reporte"}
             </button>
         </div>
       `;
@@ -259,7 +313,7 @@ async function loadReports() {
       })
     })
 
-    document.querySelectorAll(".form-button").forEach((btn) => {
+    document.querySelectorAll(".form-button:not([disabled])").forEach((btn) => {
       btn.addEventListener("click", async () => {
         const reportId = btn.dataset.id;
         const report = reports.find(r => r.id == reportId);
@@ -268,7 +322,7 @@ async function loadReports() {
         if (report.estado === "Pendiente") {
           openDetailedForm(reportId); // Editable
         } else if (report.estado === "Completado") {
-          await openCompletedForm(reportId); // Solo lectura
+          openCompletedForm(reportId); // Solo lectura
         }
       });
     })
@@ -282,11 +336,17 @@ async function openDetailedForm(reportId) {
   activeReportId = reportId
   existingFormData = null
 
+  // Resetear formulario y habilitarlo
   document.getElementById("detailed-form").reset()
+  resetFormToEditable()
   enableFormSubmission()
 
   updateCurrentDate()
+  
+  // Llenar datos del reporte (descripción)
   await fillFormWithReportData(reportId)
+  
+  // Verificar si ya existe un formulario enviado
   await loadExistingFormData(reportId)
 
   showModal("detailed-form-modal")
@@ -300,45 +360,22 @@ async function loadExistingFormData(reportId) {
       const formData = await response.json()
       existingFormData = formData
 
+      // Llenar campos con datos existentes
       document.getElementById("nombres").value = formData.nombres || ""
       document.getElementById("apellido-paterno").value = formData.apellido_paterno || ""
       document.getElementById("apellido-materno").value = formData.apellido_materno || ""
-      document.getElementById("codigo-udg").value = formData.codigo_udg || ""
+      // document.getElementById("codigo-udg").value = formData.codigo_udg || "" // <-- Quitar este campo
       document.getElementById("fecha-nacimiento").value = formData.fecha_nacimiento || ""
       document.getElementById("descripcion-detallada").value = formData.descripcion_detallada || ""
 
-      const formInputs = document.querySelectorAll("#detailed-form input, #detailed-form textarea")
-      formInputs.forEach((input) => {
-        input.disabled = true
-        input.style.backgroundColor = "#f5f5f5"
-        input.style.color = "#666"
-      })
-
-      disableFormSubmission()
-
-      const formActions = document.querySelector(".form-actions")
-      if (formActions && !document.getElementById("form-info-message")) {
-        const infoMessage = document.createElement("div")
-        infoMessage.id = "form-info-message"
-        infoMessage.style.cssText = `
-          background: #e3f2fd;
-          border: 1px solid #2196f3;
-          border-radius: 4px;
-          padding: 10px;
-          margin-bottom: 15px;
-          color: #1976d2;
-          font-size: 14px;
-          text-align: center;
-        `
-        infoMessage.innerHTML = `
-          <i class="fas fa-info-circle"></i> 
-          Este formulario ya ha sido enviado y no puede ser modificado.
-        `
-        formActions.parentNode.insertBefore(infoMessage, formActions)
-      }
+      // Hacer el formulario de solo lectura
+      makeFormReadOnly()
     }
   } catch (error) {
     console.log("No existe formulario previo para este reporte")
+    // Si no hay formulario previo, asegurar que el formulario esté editable
+    resetFormToEditable()
+    enableFormSubmission()
   }
 }
 
@@ -413,7 +450,7 @@ async function editReport(id) {
 
 function confirmCancelReport(id) {
   activeReportId = id
-  showModal("cancel-confirmation-modal")
+  showCancelReasonModal()
 }
 
 function showCancelReasonModal() {
@@ -497,19 +534,8 @@ function setupModalEvents() {
     activeReportId = null
     existingFormData = null
     document.getElementById("detailed-form").reset()
+    resetFormToEditable()
     enableFormSubmission()
-
-    const infoMessage = document.getElementById("form-info-message")
-    if (infoMessage) {
-      infoMessage.remove()
-    }
-
-    const formInputs = document.querySelectorAll("#detailed-form input, #detailed-form textarea")
-    formInputs.forEach((input) => {
-      input.disabled = false
-      input.style.backgroundColor = ""
-      input.style.color = ""
-    })
   })
 
   document.getElementById("confirm-cancel").addEventListener("click", () => {
@@ -546,19 +572,8 @@ function setupModalEvents() {
         } else {
           existingFormData = null
           document.getElementById("detailed-form").reset()
+          resetFormToEditable()
           enableFormSubmission()
-
-          const infoMessage = document.getElementById("form-info-message")
-          if (infoMessage) {
-            infoMessage.remove()
-          }
-
-          const formInputs = document.querySelectorAll("#detailed-form input, #detailed-form textarea")
-          formInputs.forEach((input) => {
-            input.disabled = false
-            input.style.backgroundColor = ""
-            input.style.color = ""
-          })
         }
       } else if (modalId === "cancel-reason-modal") {
         document.getElementById("cancel-reason-form").reset()
@@ -638,7 +653,7 @@ function setupFormEvents() {
       nombres: document.getElementById("nombres").value,
       apellidoPaterno: document.getElementById("apellido-paterno").value,
       apellidoMaterno: document.getElementById("apellido-materno").value,
-      codigoUdg: document.getElementById("codigo-udg").value,
+      // codigoUdg: document.getElementById("codigo-udg").value, // <-- Quitar este campo
       fechaNacimiento: document.getElementById("fecha-nacimiento").value,
       descripcionDetallada: document.getElementById("descripcion-detallada").value,
     }
@@ -647,7 +662,7 @@ function setupFormEvents() {
       !formData.nombres.trim() ||
       !formData.apellidoPaterno.trim() ||
       !formData.apellidoMaterno.trim() ||
-      !formData.codigoUdg.trim() ||
+      // !formData.codigoUdg.trim() || // <-- Quitar esta validación
       !formData.fechaNacimiento.trim() ||
       !formData.descripcionDetallada.trim()
     ) {
@@ -716,6 +731,15 @@ async function submitDetailedForm(formData) {
       return
     }
 
+    // Obtener el código UDG del usuario autenticado
+    const userResponse = await authenticatedFetch(`${API_URL}/me`)
+    if (!userResponse) {
+      alert("No se pudo obtener el usuario actual")
+      return
+    }
+    const user = await userResponse.json()
+    const codigoUdg = user.codigo
+
     const fecha = new Date(formData.fechaNacimiento)
     const yyyy = fecha.getFullYear()
     const mm = String(fecha.getMonth() + 1).padStart(2, '0')
@@ -727,7 +751,7 @@ async function submitDetailedForm(formData) {
       nombres: formData.nombres.trim(),
       apellido_paterno: formData.apellidoPaterno.trim(),
       apellido_materno: formData.apellidoMaterno.trim(),
-      codigo_udg: formData.codigoUdg.trim(),
+      codigo_udg: codigoUdg, // Usar el código del usuario autenticado
       fecha_nacimiento: fechaFormateada,
       descripcion_detallada: formData.descripcionDetallada.trim(),
     }
@@ -748,6 +772,8 @@ async function submitDetailedForm(formData) {
 
     if (!response) return
 
+    alert("Formulario enviado con éxito")
+
     // Limpiar y cerrar modal
     document.getElementById("detailed-form").reset()
     loadReports()
@@ -766,9 +792,15 @@ async function submitDetailedForm(formData) {
 }
 
 async function openCompletedForm(reportId) {
-  // Limpia y deshabilita el formulario
+  activeReportId = reportId
+
+  // Limpia el formulario
   document.getElementById("detailed-form").reset();
-  enableFormSubmission();
+  
+  updateCurrentDate()
+  
+  // Llenar datos del reporte (descripción)
+  await fillFormWithReportData(reportId)
 
   // Obtén los datos del formulario completado
   try {
@@ -779,26 +811,21 @@ async function openCompletedForm(reportId) {
     }
     const formData = await response.json();
 
+    // Llenar campos con datos del formulario completado
     document.getElementById("nombres").value = formData.nombres || "";
     document.getElementById("apellido-paterno").value = formData.apellido_paterno || "";
     document.getElementById("apellido-materno").value = formData.apellido_materno || "";
-    document.getElementById("codigo-udg").value = formData.codigo_udg || "";
+    // document.getElementById("codigo-udg").value = formData.codigo_udg || ""; // <-- Quitar este campo
     document.getElementById("fecha-nacimiento").value = formData.fecha_nacimiento || "";
     document.getElementById("descripcion-detallada").value = formData.descripcion_detallada || "";
 
-    // Deshabilita todos los campos
-    const formInputs = document.querySelectorAll("#detailed-form input, #detailed-form textarea");
-    formInputs.forEach((input) => {
-      input.disabled = true;
-      input.style.backgroundColor = "#f5f5f5";
-      input.style.color = "#666";
-    });
-
-    disableFormSubmission();
+    // Hacer el formulario de solo lectura
+    makeFormReadOnly()
 
     // Muestra el modal
     showModal("detailed-form-modal");
   } catch (error) {
+    console.error("Error al cargar el formulario completado:", error);
     alert("Error al cargar el formulario completado.");
   }
 }
