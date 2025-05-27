@@ -1,31 +1,46 @@
-/* Variables globales */
+/* ============================================================================
+   VARIABLES GLOBALES Y CONFIGURACIÓN
+   ============================================================================ */
+
+/* Variables CSS para mantener consistencia en colores, espaciados y efectos */
 :root {
-  --primary-color: #800000;
-  --secondary-color: #a53939;
-  --text-color: #333;
-  --light-gray: #f4f4f4;
-  --medium-gray: #ccc;
-  --dark-gray: #666;
-  --white: #fff;
-  --error-color: #d32f2f;
-  --success-color: #388e3c;
-  --transition: all 0.3s ease;
-  --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  --border-radius: 8px;
-  /* Agregamos variables para reportes cancelados */
-  --canceled-bg: #f0f0f0;
-  --canceled-text: #888;
-  --canceled-border: #ddd;
-  --disabled-button: #ccc;
+  /* Colores principales del sistema */
+  --primary-color: #800000;        /* Color principal (rojo oscuro) */
+  --secondary-color: #a53939;      /* Color secundario para hover y variaciones */
+  --text-color: #333;              /* Color de texto principal */
+  --light-gray: #f4f4f4;           /* Gris claro para fondos */
+  --medium-gray: #ccc;             /* Gris medio para bordes */
+  --dark-gray: #666;               /* Gris oscuro para texto secundario */
+  --white: #fff;                   /* Blanco puro */
+  
+  /* Colores de estado */
+  --error-color: #d32f2f;          /* Color para mensajes de error */
+  --success-color: #388e3c;        /* Color para mensajes de éxito */
+  
+  /* Efectos y transiciones */
+  --transition: all 0.3s ease;     /* Transición estándar para animaciones */
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);  /* Sombra estándar */
+  --border-radius: 8px;            /* Radio de borde estándar */
+  
+  /* Variables específicas para reportes cancelados */
+  --canceled-bg: #f0f0f0;          /* Fondo para reportes cancelados */
+  --canceled-text: #888;           /* Color de texto para reportes cancelados */
+  --canceled-border: #ddd;         /* Color de borde para reportes cancelados */
+  --disabled-button: #ccc;         /* Color para botones deshabilitados */
 }
 
-/* Reseteo y estilos generales */
+/* ============================================================================
+   RESETEO Y ESTILOS GENERALES
+   ============================================================================ */
+
+/* Reseteo universal para eliminar márgenes y paddings por defecto */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Estilos base del body - configuración principal del layout */
 body {
   font-family: sans-serif;
   line-height: 1.6;
@@ -36,11 +51,12 @@ body {
   min-height: 100vh;
 }
 
-/* Clase para bloquear scroll cuando modal está abierto */
+/* Clase para bloquear scroll cuando hay modales abiertos */
 body.modal-open {
   overflow: hidden;
 }
 
+/* Estilos generales para enlaces */
 a {
   text-decoration: none;
   color: var(--primary-color);
@@ -51,10 +67,12 @@ a:hover {
   color: var(--secondary-color);
 }
 
+/* Reseteo de listas */
 ul {
   list-style: none;
 }
 
+/* Espaciado estándar para títulos */
 h1,
 h3,
 h4,
@@ -64,11 +82,16 @@ h6 {
   line-height: 1.3;
 }
 
+/* Espaciado estándar para párrafos */
 p {
   margin-bottom: 1rem;
 }
 
-/* Header y navegación */
+/* ============================================================================
+   HEADER Y NAVEGACIÓN PRINCIPAL
+   ============================================================================ */
+
+/* Header principal fijo en la parte superior */
 header {
   background-color: var(--primary-color);
   position: fixed;
@@ -84,38 +107,10 @@ header {
   color: var(--white);
 }
 
-.logo h1 {
-  color: var(--white);
-  font-size: 1.8rem;
-  margin: 0;
-}
-
-.help-icon a {
-  color: var(--primary-color);
-  font-size: 1.7rem;
-  margin-left: 15px;
-}
-
-#username {
-  color: white;
-  padding: 0 5px;
-  font-size: 14px;
-}
-
-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 200px;
-  height: 50px;
-  color: white;
-  display: flex;
-  align-items: center;
-  z-index: 1000;
-}
+/* Estilos específicos para el header principal */
 .main-header {
   display: flex;
-  justify-content: space-between; /* Esto ya lo tienes, se mantiene */
+  justify-content: space-between;
   align-items: center;
   padding: 0 1rem;
   background-color: var(--primary-color);
@@ -128,16 +123,25 @@ footer {
   z-index: 1000;
 }
 
+/* Sección izquierda del header (logo y controles) */
 .header-left {
   display: flex;
   align-items: center;
   gap: 15px;
 }
 
+/* Sección derecha del header (usuario y logout) */
 .header-right {
   display: flex;
   align-items: center;
   gap: 15px;
+}
+
+/* Estilos para el logo */
+.logo h1 {
+  color: var(--white);
+  font-size: 1.8rem;
+  margin: 0;
 }
 
 .logo-title {
@@ -146,6 +150,14 @@ footer {
   margin: 0;
 }
 
+/* Información del usuario en el header */
+#username {
+  color: white;
+  padding: 0 5px;
+  font-size: 14px;
+}
+
+/* Botón de toggle del sidebar */
 #sidebar-toggle {
   background: none;
   border: none;
@@ -154,7 +166,24 @@ footer {
   cursor: pointer;
 }
 
-/* Sidebar */
+/* Botón de logout en el header */
+.logout-btn {
+  color: #fff;
+  background-color: transparent;
+  cursor: pointer;
+  border: none;
+}
+
+.logout-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* ============================================================================
+   SIDEBAR Y NAVEGACIÓN LATERAL
+   ============================================================================ */
+
+/* Sidebar fijo en el lado izquierdo */
 .sidebar {
   background-color: var(--white);
   width: 200px;
@@ -169,11 +198,12 @@ footer {
   flex-direction: column;
 }
 
-/* Oculta el sidebar al agregar la clase 'closed' */
+/* Estado cerrado del sidebar (para responsive) */
 .sidebar.closed {
   transform: translateX(-100%);
 }
 
+/* Menú de navegación dentro del sidebar */
 .sidebar .nav-menu {
   display: flex;
   flex-direction: column;
@@ -183,6 +213,7 @@ footer {
   margin: 0;
 }
 
+/* Enlaces de navegación en el sidebar */
 .sidebar .nav-menu a {
   display: block;
   padding: 0.75rem 1.5rem;
@@ -191,13 +222,18 @@ footer {
   font-size: 1rem;
 }
 
+/* Estados hover y activo de los enlaces del sidebar */
 .sidebar .nav-menu a:hover,
 .sidebar .nav-menu a.active {
   background-color: rgba(128, 0, 0, 0.05);
   border-left-color: var(--primary-color);
 }
 
-/* Main y secciones */
+/* ============================================================================
+   LAYOUT PRINCIPAL Y SECCIONES
+   ============================================================================ */
+
+/* Contenedor principal que se ajusta al header y sidebar */
 main {
   margin-top: 60px;
   margin-left: 200px;
@@ -206,14 +242,17 @@ main {
   background-color: #f8f8f8;
 }
 
+/* Secciones de contenido - por defecto ocultas */
 .section {
   display: none;
 }
 
+/* Sección activa - visible */
 .section.active-section {
   display: block;
 }
 
+/* Contenedor de contenido de cada sección */
 .section-content {
   background-color: var(--white);
   border-radius: var(--border-radius);
@@ -221,6 +260,7 @@ main {
   box-shadow: var(--shadow);
 }
 
+/* Títulos principales de las secciones */
 .section h2 {
   color: var(--primary-color);
   border-bottom: 1px solid var(--medium-gray);
@@ -228,34 +268,43 @@ main {
   margin-bottom: 2rem;
 }
 
+/* Subtítulos de las secciones */
 .section h3 {
   color: var(--primary-color);
   margin-bottom: 1rem;
 }
 
-/* Dashboard */
+/* ============================================================================
+   DASHBOARD Y PANELES PRINCIPALES
+   ============================================================================ */
+
+/* Contenedor principal del dashboard */
 .dashboard {
   margin-top: 1rem;
 }
 
+/* Contenedor de paneles con layout flexible */
 .panel-container {
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;
 }
 
+/* Paneles individuales del dashboard */
 .panic-button-panel,
 .reports-panel {
   flex: 1;
   min-width: 300px;
 }
 
+/* Títulos de los paneles */
 .panic-button-panel h3,
 .reports-panel h3 {
   margin-bottom: 1rem;
   color: var(--primary-color);
 }
 
+/* Contenedor del botón de pánico */
 .big-button-container {
   display: flex;
   justify-content: center;
@@ -263,7 +312,11 @@ main {
   height: 200px;
 }
 
-/* Reporte individual */
+/* ============================================================================
+   ESTILOS DE REPORTES
+   ============================================================================ */
+
+/* Contenedor individual de cada reporte */
 .report-item {
   background-color: var(--light-gray);
   border-radius: var(--border-radius);
@@ -273,7 +326,7 @@ main {
   transition: var(--transition);
 }
 
-/* Reporte cancelado */
+/* Estilos específicos para reportes cancelados */
 .report-item.canceled-report {
   background-color: var(--canceled-bg);
   border: 1px solid var(--canceled-border);
@@ -291,23 +344,59 @@ main {
   color: #aaa;
 }
 
+/* Estilos para reportes completados */
+.completed-report {
+  position: relative;
+}
+
+.completed-report::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--light-gray);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: var(--border-radius);
+}
+
+/* Botón especial para reportes completados */
+.completed-report .form-button.completed {
+  position: relative;
+  z-index: 2;
+  opacity: 1;
+  background: var(--primary-color);
+  color: #fff;
+  font-weight: bold;
+  pointer-events: auto;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.completed-report .form-button.completed:hover {
+  background: var(--secondary-color);
+}
+
+/* Header de cada reporte (ID y fecha) */
 .report-header {
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.75rem;
 }
 
+/* ID del reporte */
 .report-id {
   font-weight: bold;
   color: var(--primary-color);
 }
 
+/* Fecha y hora del reporte */
 .report-date-time {
   color: var(--dark-gray);
   font-size: 0.9rem;
 }
 
-/* Estilos para controlar el desbordamiento de texto en las descripciones */
+/* Descripción del reporte con control de overflow */
 .report-description {
   margin-bottom: 0.75rem;
   overflow-wrap: break-word;
@@ -319,7 +408,7 @@ main {
   padding-right: 5px;
 }
 
-/* Estilo para la barra de desplazamiento */
+/* Barra de desplazamiento personalizada para descripciones */
 .report-description::-webkit-scrollbar {
   width: 5px;
 }
@@ -338,13 +427,14 @@ main {
   background: #555;
 }
 
+/* Estado del reporte */
 .report-status {
   margin-bottom: 1rem;
   font-family: sans-serif;
   color: var(--dark-gray);
 }
 
-/* Nuevo estilo para mostrar la razón de cancelación */
+/* Razón de cancelación del reporte */
 .report-reason {
   margin-bottom: 1rem;
   padding: 0.75rem;
@@ -361,13 +451,18 @@ main {
   font-weight: 600;
 }
 
+/* Contenedor de acciones del reporte */
 .report-actions {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
 }
 
-/* Botones - Estilos unificados */
+/* ============================================================================
+   SISTEMA DE BOTONES
+   ============================================================================ */
+
+/* Estilos base para todos los botones */
 .btn {
   padding: 0.75rem 1.5rem;
   border: none;
@@ -383,17 +478,7 @@ main {
   min-width: 120px;
 }
 
-.btn-secondary {
-  background-color: #6c757d;
-  color: white;
-}
-
-.btn-secondary:hover {
-  background-color: #5a6268;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
+/* Botón primario (color principal) */
 .btn-primary {
   background-color: var(--primary-color);
   color: white;
@@ -405,7 +490,19 @@ main {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Botones de acción en reportes - ahora consistentes */
+/* Botón secundario (gris) */
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Botones de acción en reportes */
 .action-button {
   padding: 0.75rem 1.5rem;
   border-radius: 4px;
@@ -418,6 +515,7 @@ main {
   text-align: center;
 }
 
+/* Botón de formulario */
 .form-button {
   background-color: var(--primary-color);
   color: var(--white);
@@ -429,8 +527,9 @@ main {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* Botón de cancelar */
 .cancel-button {
-  background-color: #6c757d;
+  background-color: #800000;
   color: var(--white);
 }
 
@@ -440,7 +539,7 @@ main {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Botones deshabilitados - mejorados visualmente */
+/* Botones deshabilitados */
 .action-button[disabled],
 .btn[disabled] {
   background-color: var(--disabled-button) !important;
@@ -478,7 +577,7 @@ main {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Botones de confirmación */
+/* Botón de confirmación */
 .confirm-button {
   background-color: var(--primary-color);
   color: var(--white);
@@ -498,6 +597,7 @@ main {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* Botón de abortar/cancelar */
 .abort-button {
   background-color: #6c757d;
   color: var(--white);
@@ -517,7 +617,7 @@ main {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Botón de pánico - mantiene su estilo especial */
+/* Botón de pánico especial (circular y grande) */
 .big-button {
   width: 150px;
   height: 150px;
@@ -537,20 +637,11 @@ main {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
-/* Botón de logout en header */
-.logout-btn {
-  color: #fff;
-  background-color: transparent;
-  cursor: pointer;
-  border: none;
-}
+/* ============================================================================
+   SISTEMA DE MODALES
+   ============================================================================ */
 
-.logout-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-/* Modal - Centrado perfecto con flexbox */
+/* Overlay del modal que cubre toda la pantalla */
 .modal {
   display: none; /* Por defecto oculto */
   position: fixed;
@@ -572,6 +663,7 @@ main {
   display: flex !important;
 }
 
+/* Contenido principal del modal */
 .modal-content {
   background-color: var(--white);
   width: 100%;
@@ -583,11 +675,10 @@ main {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  /* Eliminar margin ya que flexbox se encarga del centrado */
   margin: 0;
 }
 
-/* Estilos específicos para el modal detallado */
+/* Modal específico para formularios detallados (más ancho) */
 .detailed-form-modal-content {
   background-color: var(--white);
   width: 100%;
@@ -599,11 +690,10 @@ main {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  /* Eliminar margin ya que flexbox se encarga del centrado */
   margin: 0;
 }
 
-/* Modal de confirmación - más pequeño */
+/* Modal de confirmación (más pequeño) */
 .confirmation-modal {
   max-width: 400px;
   max-height: 300px;
@@ -623,6 +713,7 @@ main {
   max-height: 90vh;
 }
 
+/* Animación de apertura del modal */
 @keyframes modalopen {
   from {
     opacity: 0;
@@ -634,6 +725,7 @@ main {
   }
 }
 
+/* Header del modal */
 .modal-header {
   background-color: var(--primary-color);
   color: var(--white);
@@ -653,6 +745,7 @@ main {
   font-weight: bold;
 }
 
+/* Botones de cierre de modales */
 .close-modal,
 .close-help-modal,
 .close-detailed-modal,
@@ -675,13 +768,18 @@ main {
   color: var(--light-gray);
 }
 
+/* Cuerpo del modal */
 .modal-body {
   padding: 1.5rem;
   flex: 1;
   overflow-y: auto;
 }
 
-/* Estilos específicos para el formulario detallado */
+/* ============================================================================
+   FORMULARIOS Y CAMPOS DE ENTRADA
+   ============================================================================ */
+
+/* Descripción del formulario detallado */
 .form-description {
   background: var(--light-gray);
   padding: 1rem 1.5rem;
@@ -691,6 +789,7 @@ main {
   flex-shrink: 0;
 }
 
+/* Contenedor del formulario detallado */
 .detailed-form {
   padding: 1.5rem;
   background: white;
@@ -698,31 +797,39 @@ main {
   overflow-y: auto;
 }
 
+/* Fila de campos en el formulario */
 .form-row {
   display: flex;
   gap: 1rem;
   margin-bottom: 1rem;
 }
 
+/* Grupo individual de campo de formulario */
 .form-group {
   flex: 1;
   display: flex;
   flex-direction: column;
+  margin-bottom: 1rem;
 }
 
+/* Campo que ocupa todo el ancho */
 .form-group.full-width {
   flex: 1 1 100%;
 }
 
+/* Etiquetas de los campos */
 .form-group label {
   font-weight: bold;
   margin-bottom: 0.5rem;
   color: var(--text-color);
   font-size: 0.9rem;
+  display: block;
 }
 
+/* Campos de entrada y áreas de texto */
 .form-group input,
 .form-group textarea {
+  width: 100%;
   padding: 0.75rem;
   border: 1px solid var(--medium-gray);
   border-radius: 4px;
@@ -731,6 +838,7 @@ main {
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
+/* Estados de foco de los campos */
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
@@ -738,17 +846,73 @@ main {
   box-shadow: 0 0 5px rgba(128, 0, 0, 0.3);
 }
 
+/* Configuración específica para áreas de texto */
 .form-group textarea {
   resize: vertical;
   min-height: 100px;
 }
 
-/* Estilos mejorados para subida de archivos */
+/* Contenedor de acciones del formulario */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--medium-gray);
+  flex-shrink: 0;
+}
+
+/* Botones de confirmación en modales */
+.confirmation-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+/* Estilos específicos para modales de confirmación */
+.confirmation-modal .modal-body {
+  text-align: center;
+}
+
+.confirmation-modal h3 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+/* ============================================================================
+   MENSAJES DE ERROR Y ÉXITO
+   ============================================================================ */
+
+/* Mensajes de error */
+.error-message {
+  color: var(--error-color);
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* Mensajes de éxito */
+.success-message {
+  color: var(--success-color);
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* ============================================================================
+   SISTEMA DE ARCHIVOS (SUBIDA Y VISTA PREVIA)
+   ============================================================================ */
+
+/* Contenedor de subida de archivos */
 .file-upload {
   position: relative;
   width: 100%;
 }
 
+/* Input de archivo oculto */
 .file-upload input[type="file"] {
   position: absolute;
   opacity: 0;
@@ -757,6 +921,7 @@ main {
   cursor: pointer;
 }
 
+/* Etiqueta personalizada para subida de archivos */
 .file-upload-label {
   display: inline-block;
   padding: 0.75rem 1rem;
@@ -784,6 +949,7 @@ main {
   list-style: none;
 }
 
+/* Item individual de archivo */
 .file-item {
   display: flex;
   align-items: center;
@@ -795,6 +961,7 @@ main {
   border: 1px solid var(--medium-gray);
 }
 
+/* Información del archivo */
 .file-info {
   display: flex;
   align-items: center;
@@ -807,28 +974,33 @@ main {
   color: var(--primary-color);
 }
 
+/* Icono del archivo */
 .file-icon {
   margin-right: 0.5rem;
   font-size: 1.1rem;
   color: var(--primary-color);
 }
 
+/* Nombre del archivo */
 .file-name {
   font-size: 0.9rem;
   font-weight: 500;
 }
 
+/* Tamaño del archivo */
 .file-size {
   font-size: 0.8rem;
   color: var(--dark-gray);
   margin-left: 0.5rem;
 }
 
+/* Acciones del archivo */
 .file-actions {
   display: flex;
   gap: 0.5rem;
 }
 
+/* Botón para remover archivo */
 .file-remove {
   background: var(--error-color);
   color: white;
@@ -844,7 +1016,7 @@ main {
   background: #b71c1c;
 }
 
-/* Vista previa de archivos */
+/* Contenido de vista previa de archivos */
 .file-preview-content {
   display: flex;
   flex-direction: column;
@@ -854,6 +1026,7 @@ main {
   padding: 1rem;
 }
 
+/* Vista previa de imágenes */
 .preview-image {
   max-width: 100%;
   max-height: 70vh;
@@ -862,6 +1035,7 @@ main {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Vista previa de videos */
 .preview-video {
   max-width: 100%;
   max-height: 70vh;
@@ -869,6 +1043,7 @@ main {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Vista previa de PDFs */
 .preview-pdf {
   width: 100%;
   height: 70vh;
@@ -876,6 +1051,7 @@ main {
   border-radius: 4px;
 }
 
+/* Archivos no soportados para vista previa */
 .preview-unsupported {
   text-align: center;
   padding: 2rem;
@@ -888,6 +1064,7 @@ main {
   color: var(--medium-gray);
 }
 
+/* Enlace de descarga */
 .download-link {
   display: inline-block;
   margin-top: 1rem;
@@ -904,122 +1081,16 @@ main {
   color: white;
 }
 
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--medium-gray);
-  flex-shrink: 0;
-}
+/* ============================================================================
+   ACORDEÓN (PREGUNTAS FRECUENTES)
+   ============================================================================ */
 
-/* Confirmation Modal - estructura consistente */
-.confirmation-modal .modal-body {
-  text-align: center;
-}
-
-.confirmation-modal h3 {
-  color: var(--primary-color);
-  margin-bottom: 1rem;
-}
-
-.confirmation-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-/* Help Modal */
-.help-modal h4 {
-  color: var(--primary-color);
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.help-modal ul {
-  margin-left: 1.5rem;
-  margin-bottom: 1rem;
-  list-style-type: disc;
-}
-
-/* Form Styles */
-.form-group {
-  margin-bottom: 1rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-}
-
-.form-group input,
-.form-group textarea {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid var(--medium-gray);
-  border-radius: 4px;
-  font-family: sans-serif;
-}
-
-.form-group textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-.error-message {
-  color: var(--error-color);
-  display: block;
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-}
-
-.success-message {
-  color: var(--success-color);
-  display: block;
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-  text-align: center;
-}
-
-/* Estilos para barras de scroll personalizadas */
-.modal-content::-webkit-scrollbar,
-.detailed-form-modal-content::-webkit-scrollbar,
-.modal-body::-webkit-scrollbar,
-.detailed-form::-webkit-scrollbar {
-  width: 8px;
-}
-
-.modal-content::-webkit-scrollbar-track,
-.detailed-form-modal-content::-webkit-scrollbar-track,
-.modal-body::-webkit-scrollbar-track,
-.detailed-form::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-.modal-content::-webkit-scrollbar-thumb,
-.detailed-form-modal-content::-webkit-scrollbar-thumb,
-.modal-body::-webkit-scrollbar-thumb,
-.detailed-form::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 4px;
-}
-
-.modal-content::-webkit-scrollbar-thumb:hover,
-.detailed-form-modal-content::-webkit-scrollbar-thumb:hover,
-.modal-body::-webkit-scrollbar-thumb:hover,
-.detailed-form::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
-
-/* Accordion Styles */
+/* Contenedor principal del acordeón */
 .accordion {
   margin-top: 1rem;
 }
 
+/* Item individual del acordeón */
 .accordion-item {
   border: 1px solid var(--medium-gray);
   border-radius: var(--border-radius);
@@ -1027,6 +1098,7 @@ main {
   overflow: hidden;
 }
 
+/* Header clickeable del acordeón */
 .accordion-header {
   background-color: var(--light-gray);
   padding: 1rem;
@@ -1040,11 +1112,13 @@ main {
   background-color: #eeeeee;
 }
 
+/* Estado activo del header del acordeón */
 .accordion-header.active {
   background-color: var(--primary-color);
   color: var(--white);
 }
 
+/* Contenido expandible del acordeón */
 .accordion-content {
   max-height: 0;
   overflow: hidden;
@@ -1056,7 +1130,11 @@ main {
   margin: 0;
 }
 
-/* Legal Content */
+/* ============================================================================
+   CONTENIDO LEGAL Y SECCIONES ESPECIALES
+   ============================================================================ */
+
+/* Contenido legal (términos, privacidad) */
 .legal-content {
   margin-top: 1rem;
 }
@@ -1067,9 +1145,9 @@ main {
 }
 
 .legal-content h4 {
-    color: var(--primary-color);
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
+  color: var(--primary-color);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .legal-content ul {
@@ -1082,7 +1160,7 @@ main {
   margin-bottom: 0.5rem;
 }
 
-/* About Section */
+/* Sección "Acerca de" */
 .about-container {
   display: flex;
   flex-wrap: wrap;
@@ -1100,6 +1178,7 @@ main {
   min-width: 200px;
 }
 
+/* Items de estadísticas */
 .stat-item {
   text-align: center;
   padding: 1.5rem;
@@ -1119,7 +1198,7 @@ main {
   color: var(--dark-gray);
 }
 
-/* Contact Section */
+/* Sección de contacto */
 .contact-container {
   display: flex;
   flex-wrap: wrap;
@@ -1155,28 +1234,110 @@ main {
   width: 20px;
 }
 
-/* Responsive Styles */
+/* ============================================================================
+   FOOTER Y ELEMENTOS FIJOS
+   ============================================================================ */
+
+/* Footer fijo en la parte inferior */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 200px;
+  height: 50px;
+  color: white;
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Icono de ayuda en el footer */
+.help-icon a {
+  color: var(--primary-color);
+  font-size: 1.7rem;
+  margin-left: 15px;
+}
+
+/* Estilos específicos para modales de ayuda */
+.help-modal h4 {
+  color: var(--primary-color);
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.help-modal ul {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+  list-style-type: disc;
+}
+
+/* ============================================================================
+   BARRAS DE SCROLL PERSONALIZADAS
+   ============================================================================ */
+
+/* Barras de scroll para modales y formularios */
+.modal-content::-webkit-scrollbar,
+.detailed-form-modal-content::-webkit-scrollbar,
+.modal-body::-webkit-scrollbar,
+.detailed-form::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track,
+.detailed-form-modal-content::-webkit-scrollbar-track,
+.modal-body::-webkit-scrollbar-track,
+.detailed-form::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb,
+.detailed-form-modal-content::-webkit-scrollbar-thumb,
+.modal-body::-webkit-scrollbar-thumb,
+.detailed-form::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover,
+.detailed-form-modal-content::-webkit-scrollbar-thumb:hover,
+.modal-body::-webkit-scrollbar-thumb:hover,
+.detailed-form::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* ============================================================================
+   RESPONSIVE DESIGN - MEDIA QUERIES
+   ============================================================================ */
+
+/* Tablets y pantallas medianas (992px y menos) */
 @media (max-width: 992px) {
+  /* Cambiar layout de paneles a columna */
   .panel-container {
     flex-direction: column;
   }
 
+  /* Cambiar layout de secciones especiales a columna */
   .about-container,
   .contact-container {
     flex-direction: column;
   }
 }
 
+/* Tablets pequeñas y móviles grandes (768px y menos) */
 @media (max-width: 768px) {
+  /* Ajustar layout principal para móviles */
   main {
     margin-left: 0;
     padding: 1rem;
   }
 
+  /* Reducir padding en secciones */
   .section-content {
     padding: 1.5rem;
   }
 
+  /* Ajustar modales para móviles */
   .modal {
     padding: 10px;
   }
@@ -1187,28 +1348,34 @@ main {
     max-height: 95vh;
   }
 
+  /* Cambiar filas de formulario a columna */
   .form-row {
     flex-direction: column;
     gap: 1rem;
   }
 
+  /* Reducir tamaño de títulos en modales */
   .modal-header h2,
   .modal-header h3 {
     font-size: 1.1rem;
   }
 
+  /* Reducir padding en formularios */
   .detailed-form {
     padding: 1rem;
   }
 
+  /* Cambiar acciones de formulario a columna */
   .form-actions {
     flex-direction: column;
   }
 
+  /* Botones de ancho completo en móviles */
   .btn {
     width: 100%;
   }
 
+  /* Ajustar items de archivo para móviles */
   .file-item {
     flex-direction: column;
     align-items: flex-start;
@@ -1220,54 +1387,27 @@ main {
   }
 }
 
+/* Móviles pequeños (480px y menos) */
 @media (max-width: 480px) {
+  /* Cambiar header de reportes a columna */
   .report-header {
     flex-direction: column;
   }
 
+  /* Cambiar acciones de reportes a columna */
   .report-actions {
     flex-direction: column;
     gap: 0.5rem;
   }
 
+  /* Botones de acción de ancho completo */
   .action-button {
     width: 100%;
     text-align: center;
   }
 
+  /* Reducir padding de modales */
   .modal {
     padding: 5px;
   }
-}
-
-.completed-report {
-  position: relative;
-}
-
-.completed-report::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--light-gray);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 1;
-  border-radius: var(--border-radius);
-}
-
-/* El botón "Ver Formulario" debe estar por encima del overlay */
-.completed-report .form-button.completed {
-  position: relative;
-  z-index: 2;
-  opacity: 1;
-  background: var(--primary-color);
-  color: #fff;
-  font-weight: bold;
-  pointer-events: auto;
-  border: none;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-
-.completed-report .form-button.completed:hover {
-  background: var(--secondary-color);
 }
