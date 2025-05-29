@@ -1,7 +1,3 @@
-// ============================================================================
-// CONFIGURACIÓN Y VARIABLES GLOBALES
-// ============================================================================
-
 const API_URL = "http://localhost:8000"
 
 // Variables de estado de la aplicación
@@ -11,9 +7,7 @@ let autoUpdate = true           // Control de actualización automática
 let currentUserRole = ""        // Rol del usuario actual
 let existingFormData = null     // Datos de formulario existente
 
-// ============================================================================
 // FUNCIONES DE AUTENTICACIÓN Y SEGURIDAD
-// ============================================================================
 
 /**
  * Realiza peticiones HTTP autenticadas con token JWT
@@ -96,10 +90,8 @@ function logout() {
   window.location.href = "index.html"
 }
 
-// ============================================================================
-// FUNCIONES DE GESTIÓN DE MODALES
-// ============================================================================
 
+// FUNCIONES DE GESTIÓN DE MODALES
 /**
  * Deshabilita el scroll del body cuando se abre un modal
  */
@@ -185,9 +177,7 @@ function closeActiveModal() {
   }
 }
 
-// ============================================================================
 // FUNCIONES DE GESTIÓN DE FORMULARIOS
-// ============================================================================
 
 /**
  * Deshabilita el botón de envío del formulario detallado
@@ -293,10 +283,8 @@ function updateCurrentDate() {
   }
 }
 
-// ============================================================================
-// FUNCIONES DE GESTIÓN DE REPORTES
-// ============================================================================
 
+// FUNCIONES DE GESTIÓN DE REPORTES
 /**
  * Carga y muestra todos los reportes del usuario actual
  * Renderiza la lista con botones de acción según el estado
@@ -703,9 +691,8 @@ async function submitDetailedForm(formData) {
   }
 }
 
-// ============================================================================
+
 // FUNCIONES DE CONFIGURACIÓN DE EVENTOS
-// ============================================================================
 
 /**
  * Configura los eventos de navegación del sidebar
@@ -942,10 +929,8 @@ function setupAccordion() {
   })
 }
 
-// ============================================================================
-// FUNCIÓN DE INICIALIZACIÓN PRINCIPAL
-// ============================================================================
 
+// FUNCIÓN DE INICIALIZACIÓN PRINCIPAL
 /**
  * Inicializa la aplicación cuando el DOM está listo
  * Verifica autenticación, carga datos del usuario y configura eventos
@@ -978,9 +963,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupKeyboardEvents()
 })
 
-// ============================================================================
 // FUNCIONES DE ACTUALIZACIÓN AUTOMÁTICA
-// ============================================================================
 
 /**
  * Actualización automática cada 30 segundos
